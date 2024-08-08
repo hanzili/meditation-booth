@@ -2,25 +2,93 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type OnijiLoginByEmailInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type OnijiSignupByEmailInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type OnijiUserReponse struct {
+	// error code
+	ErrorCode *int `json:"error_code,omitempty"`
+	// error message
+	ErrorMessage *string `json:"error_message,omitempty"`
+	// user
+	User *User `json:"user,omitempty"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type User struct {
+	// id
+	ID string `json:"id"`
+	// Email
+	Email string `json:"email"`
+	// First Name
+	FirstName *string `json:"first_name,omitempty"`
+	// Last Name
+	LastName *string `json:"last_name,omitempty"`
+	// language
+	Language *Language `json:"language,omitempty"`
+	// token
+	Token string `json:"token"`
+	// refresh token
+	RefreshToken string `json:"refresh_token"`
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type Language string
+
+const (
+	// English
+	LanguageEnglist Language = "ENGLIST"
+	// French
+	LanguageFrench Language = "FRENCH"
+)
+
+var AllLanguage = []Language{
+	LanguageEnglist,
+	LanguageFrench,
+}
+
+func (e Language) IsValid() bool {
+	switch e {
+	case LanguageEnglist, LanguageFrench:
+		return true
+	}
+	return false
+}
+
+func (e Language) String() string {
+	return string(e)
+}
+
+func (e *Language) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Language(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Language", str)
+	}
+	return nil
+}
+
+func (e Language) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

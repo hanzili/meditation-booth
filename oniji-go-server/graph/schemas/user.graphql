@@ -1,0 +1,38 @@
+enum Language {
+    "English"
+    ENGLIST
+    "French"
+    FRENCH
+}
+
+type User {
+  "id"
+  id: String!
+  "Email"
+  email: String!
+  "First Name"
+  first_name: String
+  "Last Name"
+  last_name: String
+  "language"
+  language: Language
+}
+
+input OnijiSignupByEmailInput {
+  email: String!
+  password: String!
+}
+
+input OnijiLoginByEmailInput {
+  email: String!
+  password: String!
+}
+
+type OnijiUserReponse {
+  "error code"
+  error_code: Int
+  "error message"
+  error_message: String
+  "user"
+  user: User
+}
