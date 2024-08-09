@@ -2953,7 +2953,7 @@ func (ec *executionContext) unmarshalInputOnijiSignupByEmailInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"email", "password"}
+	fieldsInOrder := [...]string{"email", "password", "first_name", "last_name"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -2974,6 +2974,20 @@ func (ec *executionContext) unmarshalInputOnijiSignupByEmailInput(ctx context.Co
 				return it, err
 			}
 			it.Password = data
+		case "first_name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first_name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.FirstName = data
+		case "last_name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last_name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LastName = data
 		}
 	}
 

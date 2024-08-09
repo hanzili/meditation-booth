@@ -25,8 +25,11 @@ func (r *mutationResolver) OnijiSignupByEmail(ctx context.Context, input model.O
 	}
 
 	user := &models.User{
-		Email:    input.Email,
-		Password: input.Password,
+		Id:        res.User.ID,
+		Email:     input.Email,
+		Password:  input.Password,
+		FirstName: &input.FirstName,
+		LastName:  &input.LastName,
 	}
 	err = repositories.UserRepo.Create(user)
 	if err != nil {
