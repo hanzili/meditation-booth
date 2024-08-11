@@ -3,14 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
-import { getClient } from "@/lib/apollo-client";
 import { ApolloWrapper } from "./ApolloWrapper";
-import { PING } from "@/lib/gql";
 
 const inter = Inter({ subsets: ["latin"] });
-getClient()
-  .query({ query: PING })
-  .then((result) => console.log(result));
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
