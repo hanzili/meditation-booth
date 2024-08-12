@@ -7,7 +7,7 @@ export const PING = gql`
 `;
 
 export const SIGNUP_BY_EMAIL = gql`
-  mutation SignupByEmail($input: ONIJI_SignupByEmailInput!) {
+  mutation SignupByEmail($input: OnijiSignupByEmailInput!) {
     ONIJI_SignupByEmail(input: $input) {
       error_code
       error_message
@@ -22,7 +22,7 @@ export const SIGNUP_BY_EMAIL = gql`
 `;
 
 export const LOGIN_BY_EMAIL = gql`
-mutation ONIJI_LoginByEmail($input: LoginByEmailInput!) {
+mutation ONIJI_LoginByEmail($input: OnijiLoginByEmailInput!) {
   ONIJI_LoginByEmail(input: $input) {
     error_code
     error_message
