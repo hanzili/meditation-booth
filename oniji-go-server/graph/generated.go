@@ -44,6 +44,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
+	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -60,6 +61,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		OnijiPing func(childComplexity int) int
+		OnijiUser func(childComplexity int) int
 	}
 
 	User struct {
@@ -79,6 +81,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	OnijiPing(ctx context.Context) (*string, error)
+	OnijiUser(ctx context.Context) (*model.OnijiUserReponse, error)
 }
 
 type executableSchema struct {
@@ -151,6 +154,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.OnijiPing(childComplexity), true
+
+	case "Query.ONIJI_User":
+		if e.complexity.Query.OnijiUser == nil {
+			break
+		}
+
+		return e.complexity.Query.OnijiUser(childComplexity), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -307,7 +317,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "schema.graphqls" "user.schema.graphqls"
+//go:embed "schema.directive.graphqls" "schema.graphqls" "user.schema.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -319,6 +329,7 @@ func sourceData(filename string) string {
 }
 
 var sources = []*ast.Source{
+	{Name: "schema.directive.graphqls", Input: sourceData("schema.directive.graphqls"), BuiltIn: false},
 	{Name: "schema.graphqls", Input: sourceData("schema.graphqls"), BuiltIn: false},
 	{Name: "user.schema.graphqls", Input: sourceData("user.schema.graphqls"), BuiltIn: false},
 }
@@ -706,6 +717,75 @@ func (ec *executionContext) fieldContext_Query_ONIJI_Ping(ctx context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_ONIJI_User(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_ONIJI_User(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().OnijiUser(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.OnijiUserReponse); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hanzili/oniji-go-server/graph/model.OnijiUserReponse`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.OnijiUserReponse)
+	fc.Result = res
+	return ec.marshalOOnijiUserReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiUserReponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_ONIJI_User(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "error_code":
+				return ec.fieldContext_OnijiUserReponse_error_code(ctx, field)
+			case "error_message":
+				return ec.fieldContext_OnijiUserReponse_error_message(ctx, field)
+			case "user":
+				return ec.fieldContext_OnijiUserReponse_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OnijiUserReponse", field.Name)
 		},
 	}
 	return fc, nil
@@ -3121,6 +3201,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_ONIJI_Ping(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "ONIJI_User":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_ONIJI_User(ctx, field)
 				return res
 			}
 

@@ -43,6 +43,10 @@ type OnijiUserReponse {
   user: User
 }
 
+extend type Query {
+  ONIJI_User: OnijiUserReponse @auth
+}
+
 type Mutation {
   ONIJI_SignupByEmail(input: OnijiSignupByEmailInput!): OnijiUserReponse
   ONIJI_LoginByEmail(input: OnijiLoginByEmailInput!): OnijiUserReponse

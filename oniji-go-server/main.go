@@ -8,6 +8,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hanzili/oniji-go-server/graph"
+	"github.com/hanzili/oniji-go-server/graph/directives"
+	"github.com/hanzili/oniji-go-server/middleware"
 )
 
 func main() {
@@ -25,7 +27,7 @@ func runWebServer() {
 		AllowCredentials: true,
 	}))
 	CreateRouter(r)
-	r.POST("/query", graphqlHandler())
+	r.POST("/query", middleware.GqlAuthRequired(), graphqlHandler())
 	r.GET("/playground", playgroundHandler())
 
 	port := ":8080"
@@ -52,7 +54,7 @@ func graphqlHandler() gin.HandlerFunc {
 	// NewExecutableSchema and Config are in the generated.go file
 	// Resolver is in the resolver.go file
 	conf := graph.Config{Resolvers: &graph.Resolver{}}
-	// conf.Directives.Auth = directives.RequireAuthDirective
+	conf.Directives.Auth = directives.RequireAuthDirective
 	// conf.Directives.AdminRequired = directives.RequireAdminAuthDirective
 	// conf.Directives.UserMessageReceivedHook = directives.UserMessageReceivedHookDirective
 	h := handler.NewDefaultServer(graph.NewExecutableSchema(conf))

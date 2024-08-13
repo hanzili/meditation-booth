@@ -7,16 +7,20 @@ package graph
 import (
 	"context"
 
+	"github.com/hanzili/oniji-go-server/config"
+	"github.com/hanzili/oniji-go-server/constants"
 	"github.com/hanzili/oniji-go-server/graph/model"
 	"github.com/hanzili/oniji-go-server/models"
 	"github.com/hanzili/oniji-go-server/repositories"
-	"github.com/hanzili/oniji-go-server/supabase"
 	"github.com/supabase-community/gotrue-go/types"
+	supabase "github.com/supabase-community/supabase-go"
 )
 
 // OnijiSignupByEmail is the resolver for the ONIJI_SignupByEmail field.
 func (r *mutationResolver) OnijiSignupByEmail(ctx context.Context, input model.OnijiSignupByEmailInput) (*model.OnijiUserReponse, error) {
-	res, err := supabase.GetClient().Auth.Signup(types.SignupRequest{
+	sConfig := config.GetConfig().SupabaseConfig
+	client, err := supabase.NewClient(sConfig.Url, sConfig.AnonKey, nil)
+	res, err := client.Auth.Signup(types.SignupRequest{
 		Email:    input.Email,
 		Password: input.Password,
 	})
@@ -47,7 +51,9 @@ func (r *mutationResolver) OnijiSignupByEmail(ctx context.Context, input model.O
 
 // OnijiLoginByEmail is the resolver for the ONIJI_LoginByEmail field.
 func (r *mutationResolver) OnijiLoginByEmail(ctx context.Context, input model.OnijiLoginByEmailInput) (*model.OnijiUserReponse, error) {
-	res, err := supabase.GetClient().Auth.SignInWithEmailPassword(input.Email, input.Password)
+	sConfig := config.GetConfig().SupabaseConfig
+	client, err := supabase.NewClient(sConfig.Url, sConfig.AnonKey, nil)
+	res, err := client.Auth.SignInWithEmailPassword(input.Email, input.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +66,20 @@ func (r *mutationResolver) OnijiLoginByEmail(ctx context.Context, input model.On
 	gqlUser := convertToGqlUser(user)
 	gqlUser.Token = res.AccessToken
 	gqlUser.RefreshToken = res.RefreshToken
+
+	return &model.OnijiUserReponse{
+		User: gqlUser,
+	}, nil
+}
+
+// OnijiUser is the resolver for the ONIJI_User field.
+func (r *queryResolver) OnijiUser(ctx context.Context) (*model.OnijiUserReponse, error) {
+	user, err := repositories.UserRepo.GetById(ctx.Value(constants.CtxKeyUserId).(string))
+	if err != nil {
+		return nil, err
+	}
+
+	gqlUser := convertToGqlUser(user)
 
 	return &model.OnijiUserReponse{
 		User: gqlUser,
