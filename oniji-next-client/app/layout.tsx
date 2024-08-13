@@ -29,8 +29,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ApolloWrapper>
-              <ModeToggle />
-              {children}
+              <div className="h-screen p-4">
+                <ModeToggle />
+                {children}
+              </div>
             </ApolloWrapper>
           </ThemeProvider>
         </body>

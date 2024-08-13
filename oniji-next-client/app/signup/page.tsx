@@ -62,7 +62,7 @@ export default function SignupForm() {
         localStorage.setItem("token", data.ONIJI_SignupByEmail.user.token);
         localStorage.setItem("refreshToken", data.ONIJI_SignupByEmail.user.refresh_token);
 
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (e) {
       console.error("Error during signup:", e);

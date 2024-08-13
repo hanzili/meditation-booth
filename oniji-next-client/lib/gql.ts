@@ -38,7 +38,7 @@ mutation ONIJI_LoginByEmail($input: OnijiLoginByEmailInput!) {
 
 export const GET_USER = gql`
 query ONIJI_User {
-  ONIJI_User {s
+  ONIJI_User {
     error_code
     error_message
     user {
@@ -49,5 +49,4 @@ query ONIJI_User {
     }
   }
 }
-
 `

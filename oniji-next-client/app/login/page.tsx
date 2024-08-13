@@ -58,7 +58,7 @@ export default function LoginForm() {
         localStorage.setItem("token", data.ONIJI_LoginByEmail.user.token);
         localStorage.setItem("refreshToken", data.ONIJI_LoginByEmail.user.refresh_token);
 
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (e) {
       console.error("Error during login:", e);
