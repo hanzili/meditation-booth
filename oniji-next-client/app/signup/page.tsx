@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,13 @@ export default function SignupForm() {
   const router = useRouter();
 
   const [signupByEmail, { loading, error }] = useMutation(SIGNUP_BY_EMAIL);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/');
+    }
+  }, [router]);
 
   const handleSignup = async () => {
     setErrorMessage("");

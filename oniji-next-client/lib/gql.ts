@@ -35,3 +35,19 @@ mutation ONIJI_LoginByEmail($input: OnijiLoginByEmailInput!) {
   }
 }
 `;
+
+export const GET_USER = gql`
+query ONIJI_User {
+  ONIJI_User {s
+    error_code
+    error_message
+    user {
+      id
+      email
+      first_name
+      last_name
+    }
+  }
+}
+
+`
