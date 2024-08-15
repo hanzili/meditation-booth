@@ -48,9 +48,30 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Music struct {
+		Duration func(childComplexity int) int
+		Name     func(childComplexity int) int
+		URL      func(childComplexity int) int
+	}
+
 	Mutation struct {
+		OnijiCreateSession func(childComplexity int, input model.OnijiCreateSessionInput) int
+		OnijiEndSession    func(childComplexity int, input model.OnijiEndSessionInput) int
 		OnijiLoginByEmail  func(childComplexity int, input model.OnijiLoginByEmailInput) int
 		OnijiSignupByEmail func(childComplexity int, input model.OnijiSignupByEmailInput) int
+	}
+
+	OnijiSessionReponse struct {
+		ErrorCode    func(childComplexity int) int
+		ErrorMessage func(childComplexity int) int
+		Session      func(childComplexity int) int
+	}
+
+	OnijiSessionsResponse struct {
+		ErrorCode    func(childComplexity int) int
+		ErrorMessage func(childComplexity int) int
+		Sessions     func(childComplexity int) int
+		TotalCount   func(childComplexity int) int
 	}
 
 	OnijiUserReponse struct {
@@ -60,8 +81,20 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		OnijiPing func(childComplexity int) int
-		OnijiUser func(childComplexity int) int
+		OnijiGetSessions func(childComplexity int) int
+		OnijiPing        func(childComplexity int) int
+		OnijiUser        func(childComplexity int) int
+	}
+
+	Session struct {
+		EndTime     func(childComplexity int) int
+		HasScent    func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Mood        func(childComplexity int) int
+		Music       func(childComplexity int) int
+		SessionType func(childComplexity int) int
+		StartTime   func(childComplexity int) int
+		UserID      func(childComplexity int) int
 	}
 
 	User struct {
@@ -78,9 +111,12 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	OnijiSignupByEmail(ctx context.Context, input model.OnijiSignupByEmailInput) (*model.OnijiUserReponse, error)
 	OnijiLoginByEmail(ctx context.Context, input model.OnijiLoginByEmailInput) (*model.OnijiUserReponse, error)
+	OnijiCreateSession(ctx context.Context, input model.OnijiCreateSessionInput) (*model.OnijiSessionReponse, error)
+	OnijiEndSession(ctx context.Context, input model.OnijiEndSessionInput) (*model.OnijiSessionReponse, error)
 }
 type QueryResolver interface {
 	OnijiPing(ctx context.Context) (*string, error)
+	OnijiGetSessions(ctx context.Context) (*model.OnijiSessionsResponse, error)
 	OnijiUser(ctx context.Context) (*model.OnijiUserReponse, error)
 }
 
@@ -102,6 +138,51 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Music.duration":
+		if e.complexity.Music.Duration == nil {
+			break
+		}
+
+		return e.complexity.Music.Duration(childComplexity), true
+
+	case "Music.name":
+		if e.complexity.Music.Name == nil {
+			break
+		}
+
+		return e.complexity.Music.Name(childComplexity), true
+
+	case "Music.url":
+		if e.complexity.Music.URL == nil {
+			break
+		}
+
+		return e.complexity.Music.URL(childComplexity), true
+
+	case "Mutation.ONIJI_CreateSession":
+		if e.complexity.Mutation.OnijiCreateSession == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_ONIJI_CreateSession_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.OnijiCreateSession(childComplexity, args["input"].(model.OnijiCreateSessionInput)), true
+
+	case "Mutation.ONIJI_EndSession":
+		if e.complexity.Mutation.OnijiEndSession == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_ONIJI_EndSession_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.OnijiEndSession(childComplexity, args["input"].(model.OnijiEndSessionInput)), true
 
 	case "Mutation.ONIJI_LoginByEmail":
 		if e.complexity.Mutation.OnijiLoginByEmail == nil {
@@ -127,6 +208,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.OnijiSignupByEmail(childComplexity, args["input"].(model.OnijiSignupByEmailInput)), true
 
+	case "OnijiSessionReponse.error_code":
+		if e.complexity.OnijiSessionReponse.ErrorCode == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionReponse.ErrorCode(childComplexity), true
+
+	case "OnijiSessionReponse.error_message":
+		if e.complexity.OnijiSessionReponse.ErrorMessage == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionReponse.ErrorMessage(childComplexity), true
+
+	case "OnijiSessionReponse.session":
+		if e.complexity.OnijiSessionReponse.Session == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionReponse.Session(childComplexity), true
+
+	case "OnijiSessionsResponse.error_code":
+		if e.complexity.OnijiSessionsResponse.ErrorCode == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionsResponse.ErrorCode(childComplexity), true
+
+	case "OnijiSessionsResponse.error_message":
+		if e.complexity.OnijiSessionsResponse.ErrorMessage == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionsResponse.ErrorMessage(childComplexity), true
+
+	case "OnijiSessionsResponse.sessions":
+		if e.complexity.OnijiSessionsResponse.Sessions == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionsResponse.Sessions(childComplexity), true
+
+	case "OnijiSessionsResponse.total_count":
+		if e.complexity.OnijiSessionsResponse.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.OnijiSessionsResponse.TotalCount(childComplexity), true
+
 	case "OnijiUserReponse.error_code":
 		if e.complexity.OnijiUserReponse.ErrorCode == nil {
 			break
@@ -148,6 +278,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.OnijiUserReponse.User(childComplexity), true
 
+	case "Query.ONIJI_GetSessions":
+		if e.complexity.Query.OnijiGetSessions == nil {
+			break
+		}
+
+		return e.complexity.Query.OnijiGetSessions(childComplexity), true
+
 	case "Query.ONIJI_Ping":
 		if e.complexity.Query.OnijiPing == nil {
 			break
@@ -161,6 +298,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.OnijiUser(childComplexity), true
+
+	case "Session.end_time":
+		if e.complexity.Session.EndTime == nil {
+			break
+		}
+
+		return e.complexity.Session.EndTime(childComplexity), true
+
+	case "Session.has_scent":
+		if e.complexity.Session.HasScent == nil {
+			break
+		}
+
+		return e.complexity.Session.HasScent(childComplexity), true
+
+	case "Session.id":
+		if e.complexity.Session.ID == nil {
+			break
+		}
+
+		return e.complexity.Session.ID(childComplexity), true
+
+	case "Session.mood":
+		if e.complexity.Session.Mood == nil {
+			break
+		}
+
+		return e.complexity.Session.Mood(childComplexity), true
+
+	case "Session.music":
+		if e.complexity.Session.Music == nil {
+			break
+		}
+
+		return e.complexity.Session.Music(childComplexity), true
+
+	case "Session.session_type":
+		if e.complexity.Session.SessionType == nil {
+			break
+		}
+
+		return e.complexity.Session.SessionType(childComplexity), true
+
+	case "Session.start_time":
+		if e.complexity.Session.StartTime == nil {
+			break
+		}
+
+		return e.complexity.Session.StartTime(childComplexity), true
+
+	case "Session.user_id":
+		if e.complexity.Session.UserID == nil {
+			break
+		}
+
+		return e.complexity.Session.UserID(childComplexity), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -219,6 +412,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputOnijiCreateSessionInput,
+		ec.unmarshalInputOnijiEndSessionInput,
 		ec.unmarshalInputOnijiLoginByEmailInput,
 		ec.unmarshalInputOnijiSignupByEmailInput,
 	)
@@ -317,7 +512,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "schema.directive.graphqls" "schema.graphqls" "user.schema.graphqls"
+//go:embed "schema.directive.graphqls" "schema.graphqls" "session.schema.graphqls" "user.schema.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -331,6 +526,7 @@ func sourceData(filename string) string {
 var sources = []*ast.Source{
 	{Name: "schema.directive.graphqls", Input: sourceData("schema.directive.graphqls"), BuiltIn: false},
 	{Name: "schema.graphqls", Input: sourceData("schema.graphqls"), BuiltIn: false},
+	{Name: "session.schema.graphqls", Input: sourceData("session.schema.graphqls"), BuiltIn: false},
 	{Name: "user.schema.graphqls", Input: sourceData("user.schema.graphqls"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -338,6 +534,36 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_ONIJI_CreateSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.OnijiCreateSessionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNOnijiCreateSessionInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiCreateSessionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_ONIJI_EndSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.OnijiEndSessionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNOnijiEndSessionInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiEndSessionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_ONIJI_LoginByEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -421,6 +647,129 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Music_name(ctx context.Context, field graphql.CollectedField, obj *model.Music) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Music_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Music_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Music",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Music_url(ctx context.Context, field graphql.CollectedField, obj *model.Music) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Music_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Music_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Music",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Music_duration(ctx context.Context, field graphql.CollectedField, obj *model.Music) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Music_duration(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Duration, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Music_duration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Music",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _Mutation_ONIJI_SignupByEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_ONIJI_SignupByEmail(ctx, field)
@@ -538,6 +887,492 @@ func (ec *executionContext) fieldContext_Mutation_ONIJI_LoginByEmail(ctx context
 	if fc.Args, err = ec.field_Mutation_ONIJI_LoginByEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_ONIJI_CreateSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_ONIJI_CreateSession(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().OnijiCreateSession(rctx, fc.Args["input"].(model.OnijiCreateSessionInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.OnijiSessionReponse); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hanzili/oniji-go-server/graph/model.OnijiSessionReponse`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.OnijiSessionReponse)
+	fc.Result = res
+	return ec.marshalOOnijiSessionReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSessionReponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_ONIJI_CreateSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "error_code":
+				return ec.fieldContext_OnijiSessionReponse_error_code(ctx, field)
+			case "error_message":
+				return ec.fieldContext_OnijiSessionReponse_error_message(ctx, field)
+			case "session":
+				return ec.fieldContext_OnijiSessionReponse_session(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OnijiSessionReponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_ONIJI_CreateSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_ONIJI_EndSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_ONIJI_EndSession(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().OnijiEndSession(rctx, fc.Args["input"].(model.OnijiEndSessionInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.OnijiSessionReponse); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hanzili/oniji-go-server/graph/model.OnijiSessionReponse`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.OnijiSessionReponse)
+	fc.Result = res
+	return ec.marshalOOnijiSessionReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSessionReponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_ONIJI_EndSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "error_code":
+				return ec.fieldContext_OnijiSessionReponse_error_code(ctx, field)
+			case "error_message":
+				return ec.fieldContext_OnijiSessionReponse_error_message(ctx, field)
+			case "session":
+				return ec.fieldContext_OnijiSessionReponse_session(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OnijiSessionReponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_ONIJI_EndSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionReponse_error_code(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionReponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionReponse_error_code(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ErrorCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionReponse_error_code(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionReponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionReponse_error_message(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionReponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionReponse_error_message(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ErrorMessage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionReponse_error_message(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionReponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionReponse_session(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionReponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionReponse_session(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Session, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Session)
+	fc.Result = res
+	return ec.marshalOSession2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSession(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionReponse_session(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionReponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Session_id(ctx, field)
+			case "user_id":
+				return ec.fieldContext_Session_user_id(ctx, field)
+			case "mood":
+				return ec.fieldContext_Session_mood(ctx, field)
+			case "session_type":
+				return ec.fieldContext_Session_session_type(ctx, field)
+			case "has_scent":
+				return ec.fieldContext_Session_has_scent(ctx, field)
+			case "start_time":
+				return ec.fieldContext_Session_start_time(ctx, field)
+			case "end_time":
+				return ec.fieldContext_Session_end_time(ctx, field)
+			case "music":
+				return ec.fieldContext_Session_music(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Session", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionsResponse_error_code(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionsResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionsResponse_error_code(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ErrorCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionsResponse_error_code(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionsResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionsResponse_error_message(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionsResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionsResponse_error_message(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ErrorMessage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionsResponse_error_message(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionsResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionsResponse_sessions(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionsResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionsResponse_sessions(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sessions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Session)
+	fc.Result = res
+	return ec.marshalOSession2ᚕᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSessionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionsResponse_sessions(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionsResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Session_id(ctx, field)
+			case "user_id":
+				return ec.fieldContext_Session_user_id(ctx, field)
+			case "mood":
+				return ec.fieldContext_Session_mood(ctx, field)
+			case "session_type":
+				return ec.fieldContext_Session_session_type(ctx, field)
+			case "has_scent":
+				return ec.fieldContext_Session_has_scent(ctx, field)
+			case "start_time":
+				return ec.fieldContext_Session_start_time(ctx, field)
+			case "end_time":
+				return ec.fieldContext_Session_end_time(ctx, field)
+			case "music":
+				return ec.fieldContext_Session_music(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Session", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _OnijiSessionsResponse_total_count(ctx context.Context, field graphql.CollectedField, obj *model.OnijiSessionsResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_OnijiSessionsResponse_total_count(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_OnijiSessionsResponse_total_count(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "OnijiSessionsResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -717,6 +1552,77 @@ func (ec *executionContext) fieldContext_Query_ONIJI_Ping(ctx context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_ONIJI_GetSessions(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_ONIJI_GetSessions(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().OnijiGetSessions(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.OnijiSessionsResponse); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hanzili/oniji-go-server/graph/model.OnijiSessionsResponse`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.OnijiSessionsResponse)
+	fc.Result = res
+	return ec.marshalOOnijiSessionsResponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSessionsResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_ONIJI_GetSessions(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "error_code":
+				return ec.fieldContext_OnijiSessionsResponse_error_code(ctx, field)
+			case "error_message":
+				return ec.fieldContext_OnijiSessionsResponse_error_message(ctx, field)
+			case "sessions":
+				return ec.fieldContext_OnijiSessionsResponse_sessions(ctx, field)
+			case "total_count":
+				return ec.fieldContext_OnijiSessionsResponse_total_count(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OnijiSessionsResponse", field.Name)
 		},
 	}
 	return fc, nil
@@ -915,6 +1821,360 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_id(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_user_id(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_user_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_user_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_mood(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_mood(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Mood, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_mood(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_session_type(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_session_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SessionType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_session_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_has_scent(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_has_scent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasScent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_has_scent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_start_time(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_start_time(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_start_time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_end_time(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_end_time(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_end_time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_music(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_music(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Music, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Music)
+	fc.Result = res
+	return ec.marshalNMusic2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐMusic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_music(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_Music_name(ctx, field)
+			case "url":
+				return ec.fieldContext_Music_url(ctx, field)
+			case "duration":
+				return ec.fieldContext_Music_duration(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Music", field.Name)
 		},
 	}
 	return fc, nil
@@ -2992,6 +4252,74 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputOnijiCreateSessionInput(ctx context.Context, obj interface{}) (model.OnijiCreateSessionInput, error) {
+	var it model.OnijiCreateSessionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"mood", "session_type", "has_scent"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "mood":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mood"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Mood = data
+		case "session_type":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("session_type"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SessionType = data
+		case "has_scent":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("has_scent"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.HasScent = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputOnijiEndSessionInput(ctx context.Context, obj interface{}) (model.OnijiEndSessionInput, error) {
+	var it model.OnijiEndSessionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputOnijiLoginByEmailInput(ctx context.Context, obj interface{}) (model.OnijiLoginByEmailInput, error) {
 	var it model.OnijiLoginByEmailInput
 	asMap := map[string]interface{}{}
@@ -3082,6 +4410,46 @@ func (ec *executionContext) unmarshalInputOnijiSignupByEmailInput(ctx context.Co
 
 // region    **************************** object.gotpl ****************************
 
+var musicImplementors = []string{"Music"}
+
+func (ec *executionContext) _Music(ctx context.Context, sel ast.SelectionSet, obj *model.Music) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, musicImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Music")
+		case "name":
+			out.Values[i] = ec._Music_name(ctx, field, obj)
+		case "url":
+			out.Values[i] = ec._Music_url(ctx, field, obj)
+		case "duration":
+			out.Values[i] = ec._Music_duration(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3109,6 +4477,99 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_ONIJI_LoginByEmail(ctx, field)
 			})
+		case "ONIJI_CreateSession":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_ONIJI_CreateSession(ctx, field)
+			})
+		case "ONIJI_EndSession":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_ONIJI_EndSession(ctx, field)
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var onijiSessionReponseImplementors = []string{"OnijiSessionReponse"}
+
+func (ec *executionContext) _OnijiSessionReponse(ctx context.Context, sel ast.SelectionSet, obj *model.OnijiSessionReponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, onijiSessionReponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OnijiSessionReponse")
+		case "error_code":
+			out.Values[i] = ec._OnijiSessionReponse_error_code(ctx, field, obj)
+		case "error_message":
+			out.Values[i] = ec._OnijiSessionReponse_error_message(ctx, field, obj)
+		case "session":
+			out.Values[i] = ec._OnijiSessionReponse_session(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var onijiSessionsResponseImplementors = []string{"OnijiSessionsResponse"}
+
+func (ec *executionContext) _OnijiSessionsResponse(ctx context.Context, sel ast.SelectionSet, obj *model.OnijiSessionsResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, onijiSessionsResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OnijiSessionsResponse")
+		case "error_code":
+			out.Values[i] = ec._OnijiSessionsResponse_error_code(ctx, field, obj)
+		case "error_message":
+			out.Values[i] = ec._OnijiSessionsResponse_error_message(ctx, field, obj)
+		case "sessions":
+			out.Values[i] = ec._OnijiSessionsResponse_sessions(ctx, field, obj)
+		case "total_count":
+			out.Values[i] = ec._OnijiSessionsResponse_total_count(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3210,6 +4671,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "ONIJI_GetSessions":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_ONIJI_GetSessions(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "ONIJI_User":
 			field := field
 
@@ -3237,6 +4717,74 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var sessionImplementors = []string{"Session"}
+
+func (ec *executionContext) _Session(ctx context.Context, sel ast.SelectionSet, obj *model.Session) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sessionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Session")
+		case "id":
+			out.Values[i] = ec._Session_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "user_id":
+			out.Values[i] = ec._Session_user_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "mood":
+			out.Values[i] = ec._Session_mood(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "session_type":
+			out.Values[i] = ec._Session_session_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "has_scent":
+			out.Values[i] = ec._Session_has_scent(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "start_time":
+			out.Values[i] = ec._Session_start_time(ctx, field, obj)
+		case "end_time":
+			out.Values[i] = ec._Session_end_time(ctx, field, obj)
+		case "music":
+			out.Values[i] = ec._Session_music(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3661,6 +5209,41 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNMusic2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐMusic(ctx context.Context, sel ast.SelectionSet, v *model.Music) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Music(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNOnijiCreateSessionInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiCreateSessionInput(ctx context.Context, v interface{}) (model.OnijiCreateSessionInput, error) {
+	res, err := ec.unmarshalInputOnijiCreateSessionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNOnijiEndSessionInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiEndSessionInput(ctx context.Context, v interface{}) (model.OnijiEndSessionInput, error) {
+	res, err := ec.unmarshalInputOnijiEndSessionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNOnijiLoginByEmailInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiLoginByEmailInput(ctx context.Context, v interface{}) (model.OnijiLoginByEmailInput, error) {
 	res, err := ec.unmarshalInputOnijiLoginByEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3669,6 +5252,16 @@ func (ec *executionContext) unmarshalNOnijiLoginByEmailInput2githubᚗcomᚋhanz
 func (ec *executionContext) unmarshalNOnijiSignupByEmailInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSignupByEmailInput(ctx context.Context, v interface{}) (model.OnijiSignupByEmailInput, error) {
 	res, err := ec.unmarshalInputOnijiSignupByEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSession2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSession(ctx context.Context, sel ast.SelectionSet, v *model.Session) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Session(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -3997,11 +5590,79 @@ func (ec *executionContext) marshalOLanguage2ᚖgithubᚗcomᚋhanziliᚋoniji�
 	return v
 }
 
+func (ec *executionContext) marshalOOnijiSessionReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSessionReponse(ctx context.Context, sel ast.SelectionSet, v *model.OnijiSessionReponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OnijiSessionReponse(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOOnijiSessionsResponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiSessionsResponse(ctx context.Context, sel ast.SelectionSet, v *model.OnijiSessionsResponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OnijiSessionsResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOOnijiUserReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiUserReponse(ctx context.Context, sel ast.SelectionSet, v *model.OnijiUserReponse) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._OnijiUserReponse(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSession2ᚕᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSessionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Session) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSession2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSession(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOSession2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐSession(ctx context.Context, sel ast.SelectionSet, v *model.Session) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Session(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

@@ -8,12 +8,51 @@ import (
 	"strconv"
 )
 
+type Music struct {
+	// name
+	Name *string `json:"name,omitempty"`
+	// url
+	URL *string `json:"url,omitempty"`
+	// duration
+	Duration *int `json:"duration,omitempty"`
+}
+
 type Mutation struct {
+}
+
+type OnijiCreateSessionInput struct {
+	Mood        string `json:"mood"`
+	SessionType string `json:"session_type"`
+	HasScent    bool   `json:"has_scent"`
+}
+
+type OnijiEndSessionInput struct {
+	ID string `json:"id"`
 }
 
 type OnijiLoginByEmailInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type OnijiSessionReponse struct {
+	// error code
+	ErrorCode *int `json:"error_code,omitempty"`
+	// error message
+	ErrorMessage *string `json:"error_message,omitempty"`
+	// session
+	Session *Session `json:"session,omitempty"`
+}
+
+type OnijiSessionsResponse struct {
+	// error code
+	ErrorCode *int `json:"error_code,omitempty"`
+	// error message
+	ErrorMessage *string `json:"error_message,omitempty"`
+	// sessions
+	Sessions []*Session `json:"sessions,omitempty"`
+	// total_count
+	TotalCount int `json:"total_count"`
 }
 
 type OnijiSignupByEmailInput struct {
@@ -33,6 +72,25 @@ type OnijiUserReponse struct {
 }
 
 type Query struct {
+}
+
+type Session struct {
+	// id
+	ID string `json:"id"`
+	// user id
+	UserID string `json:"user_id"`
+	// mood
+	Mood string `json:"mood"`
+	// session type
+	SessionType string `json:"session_type"`
+	// has scent
+	HasScent bool `json:"has_scent"`
+	// start time
+	StartTime *string `json:"start_time,omitempty"`
+	// end time
+	EndTime *string `json:"end_time,omitempty"`
+	// music
+	Music *Music `json:"music"`
 }
 
 type User struct {

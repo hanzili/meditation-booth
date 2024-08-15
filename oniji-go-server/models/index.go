@@ -23,6 +23,24 @@ func CreateEnums() {
 		LanguageEn,
 	)
 	database.GetClient().Exec(languageQuery)
+
+	moodQuery := fmt.Sprintf(
+		"CREATE TYPE public.%s AS ENUM ('%s', '%s', '%s', '%s');",
+		MoodEnum,
+		MoodHighEnergyPleasant,
+		MoodHighEnergyUnpleasant,
+		MoodLowEnergyPleasant,
+		MoodLowEnergyUnpleasant,
+	)
+	database.GetClient().Exec(moodQuery)
+
+	sessionTypeQuery := fmt.Sprintf(
+		"CREATE TYPE public.%s AS ENUM ('%s', '%s');",
+		SessionTypeEnum,
+		SessionTypeGuided,
+		SessionTypeMusicOnly,
+	)
+	database.GetClient().Exec(sessionTypeQuery)
 }
 
 func CreateSchemas() {

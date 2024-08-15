@@ -23,3 +23,34 @@ func convertToGqlUser(user *models.User) *model.User {
 
 	return gqlUser
 }
+
+func convertToGqlSession(session *models.Session) *model.Session {
+	if session == nil {
+		return nil
+	}
+	gqlSession := &model.Session{
+		ID:          session.Id.String(),
+		UserID:      session.UserId.String(),
+		Mood:        string(session.Mood),
+		SessionType: string(session.SessionType),
+		HasScent:    session.HasScent,
+	}
+	if session.StartTime != nil {
+		startTime := session.StartTime.String()
+		gqlSession.StartTime = &startTime
+	}
+	if session.EndTime != nil {
+		endTime := session.EndTime.String()
+		gqlSession.EndTime = &endTime
+	}
+
+	return gqlSession
+}
+
+func convertToGqlSessions(sessions []*models.Session) []*model.Session {
+	var result []*model.Session
+	for _, s := range sessions {
+		result = append(result, convertToGqlSession(s))
+	}
+	return result
+}

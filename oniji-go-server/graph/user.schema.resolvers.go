@@ -53,6 +53,10 @@ func (r *mutationResolver) OnijiSignupByEmail(ctx context.Context, input model.O
 func (r *mutationResolver) OnijiLoginByEmail(ctx context.Context, input model.OnijiLoginByEmailInput) (*model.OnijiUserReponse, error) {
 	sConfig := config.GetConfig().SupabaseConfig
 	client, err := supabase.NewClient(sConfig.Url, sConfig.AnonKey, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := client.Auth.SignInWithEmailPassword(input.Email, input.Password)
 	if err != nil {
 		return nil, err
