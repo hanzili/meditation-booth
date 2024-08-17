@@ -25,26 +25,62 @@ import {
 } from "@/components/ui/select";
 
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { useMutation } from "@apollo/client";
+import { CREATE_SESSION } from "@/lib/gql";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
   mood: z.string().min(1, "Please select your mood."),
-  sessionType: z.string().min(1, "Please select a session type."),
-  scentPreference: z.string().min(1, "Please select your scent preference."),
+  session_type: z.string().min(1, "Please select a session type."),
+  has_scent: z.boolean().refine((val) => val === true || val === false, {
+    message: "Please select your scent preference.",
+  }),
 });
 
+type FormValues = z.infer<typeof FormSchema>;
+
 export default function SessionForm() {
-  const form = useForm({
+  const router = useRouter();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    console.log(storedToken);
+    if (!storedToken) {
+      router.push("/login");
+    } else {
+      setToken(storedToken);
+    }
+  }, [router]);
+
+  const [createSession, { loading, error }] = useMutation(CREATE_SESSION);
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: any) {
-    // TODO: Replace any with the correct type
-    console.log(data);
-    // Handle form submission, e.g., send data to the backend
+
+  async function onSubmit(data: FormValues) {
+    if (!token) return;
+    
+    const res = await createSession({
+      variables: {
+        input: data,
+      },
+      context: {
+        headers: {
+          authorization: token,
+        },
+      },
+    });
+
+    const sessionId = res.data.ONIJI_CreateSession.session.id;
+    router.push(`/session/${sessionId}`);
   }
 
   return (
-    <Card className="w-2/3 m-auto p-5">
+    <Card className="w-3/4 m-auto p-5">
       <CardHeader>Start a Session</CardHeader>
       <CardContent>
         <Form {...form}>
@@ -62,16 +98,16 @@ export default function SessionForm() {
                         <SelectValue placeholder="Select your mood" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="high-energy-pleasant">
+                        <SelectItem value="HIGH_ENERGY_PLEASANT">
                           High Energy Pleasant
                         </SelectItem>
-                        <SelectItem value="high-energy-unpleasant">
+                        <SelectItem value="HIGH_ENERGY_UNPLEASANT">
                           High Energy Unpleasant
                         </SelectItem>
-                        <SelectItem value="low-energy-pleasant">
+                        <SelectItem value="LOW_ENERGY_PLEASANT">
                           Low Energy Pleasant
                         </SelectItem>
-                        <SelectItem value="low-energy-unpleasant">
+                        <SelectItem value="LOW_ENERGY_UNPLEASANT">
                           Low Energy Unpleasant
                         </SelectItem>
                       </SelectContent>
@@ -85,7 +121,7 @@ export default function SessionForm() {
             {/* Session Type Selection */}
             <FormField
               control={form.control}
-              name="sessionType"
+              name="session_type"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Session Type</FormLabel>
@@ -95,10 +131,10 @@ export default function SessionForm() {
                         <SelectValue placeholder="Select session type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="guided-meditation">
+                        <SelectItem value="GUIDED">
                           Guided Meditation
                         </SelectItem>
-                        <SelectItem value="music-only">
+                        <SelectItem value="MUSIC_ONLY">
                           Music Only (no instructions)
                         </SelectItem>
                       </SelectContent>
@@ -112,7 +148,7 @@ export default function SessionForm() {
             {/* Scent Preference */}
             <FormField
               control={form.control}
-              name="scentPreference"
+              name="has_scent"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Scent Preference</FormLabel>
@@ -121,22 +157,22 @@ export default function SessionForm() {
                       <Label className="flex items-center mr-8">
                         <Input
                           type="radio"
-                          value="yes"
-                          checked={field.value === "yes"}
-                          onChange={field.onChange}
+                          value="true"
+                          checked={field.value === true}
+                          onChange={() => field.onChange(true)}
                           className="w-fit mr-2"
                         />
-                        Yes
+                        True
                       </Label>
                       <Label className="flex items-center">
                         <Input
                           type="radio"
-                          value="no"
-                          checked={field.value === "no"}
-                          onChange={field.onChange}
+                          value="false"
+                          checked={field.value === false}
+                          onChange={() => field.onChange(false)}
                           className="w-fit mr-2"
                         />
-                        No
+                        False
                       </Label>
                     </div>
                   </FormControl>
@@ -144,8 +180,12 @@ export default function SessionForm() {
                 </FormItem>
               )}
             />
+            <Button type="submit" disabled={loading}>
+              {loading ? "Starting..." : "Start"}
+            </Button>
 
-            <Button type="submit">Start</Button>
+            {/* error */}
+            {error && <p className="text-red-500">{error.message}</p>}
           </form>
         </Form>
       </CardContent>
