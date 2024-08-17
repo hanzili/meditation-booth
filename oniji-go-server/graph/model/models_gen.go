@@ -35,6 +35,10 @@ type OnijiLoginByEmailInput struct {
 	Password string `json:"password"`
 }
 
+type OnijiRefreshTokenInput struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
 type OnijiSessionReponse struct {
 	// error code
 	ErrorCode *int `json:"error_code,omitempty"`

@@ -76,6 +76,33 @@ func (r *mutationResolver) OnijiLoginByEmail(ctx context.Context, input model.On
 	}, nil
 }
 
+// OnijiRefreshToken is the resolver for the ONIJI_RefreshToken field.
+func (r *mutationResolver) OnijiRefreshToken(ctx context.Context, input model.OnijiRefreshTokenInput) (*model.OnijiUserReponse, error) {
+	sConfig := config.GetConfig().SupabaseConfig
+	client, err := supabase.NewClient(sConfig.Url, sConfig.AnonKey, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := client.Auth.RefreshToken(input.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := repositories.UserRepo.GetById(res.Session.User.ID.String())
+	if err != nil {
+		return nil, err
+	}
+
+	gqlUser := convertToGqlUser(user)
+	gqlUser.Token = res.AccessToken
+	gqlUser.RefreshToken = res.RefreshToken
+
+	return &model.OnijiUserReponse{
+		User: gqlUser,
+	}, nil
+}
+
 // OnijiUser is the resolver for the ONIJI_User field.
 func (r *queryResolver) OnijiUser(ctx context.Context) (*model.OnijiUserReponse, error) {
 	user, err := repositories.UserRepo.GetById(ctx.Value(constants.CtxKeyUserId).(string))

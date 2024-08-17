@@ -34,6 +34,11 @@ func convertToGqlSession(session *models.Session) *model.Session {
 		Mood:        string(session.Mood),
 		SessionType: string(session.SessionType),
 		HasScent:    session.HasScent,
+		Music: &model.Music{
+			Name:     &session.Music.Name,
+			URL:      &session.Music.Url,
+			Duration: &session.Music.Duration,
+		},
 	}
 	if session.StartTime != nil {
 		startTime := session.StartTime.String()

@@ -58,6 +58,7 @@ type ComplexityRoot struct {
 		OnijiCreateSession func(childComplexity int, input model.OnijiCreateSessionInput) int
 		OnijiEndSession    func(childComplexity int, input model.OnijiEndSessionInput) int
 		OnijiLoginByEmail  func(childComplexity int, input model.OnijiLoginByEmailInput) int
+		OnijiRefreshToken  func(childComplexity int, input model.OnijiRefreshTokenInput) int
 		OnijiSignupByEmail func(childComplexity int, input model.OnijiSignupByEmailInput) int
 	}
 
@@ -111,6 +112,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	OnijiSignupByEmail(ctx context.Context, input model.OnijiSignupByEmailInput) (*model.OnijiUserReponse, error)
 	OnijiLoginByEmail(ctx context.Context, input model.OnijiLoginByEmailInput) (*model.OnijiUserReponse, error)
+	OnijiRefreshToken(ctx context.Context, input model.OnijiRefreshTokenInput) (*model.OnijiUserReponse, error)
 	OnijiCreateSession(ctx context.Context, input model.OnijiCreateSessionInput) (*model.OnijiSessionReponse, error)
 	OnijiEndSession(ctx context.Context, input model.OnijiEndSessionInput) (*model.OnijiSessionReponse, error)
 }
@@ -195,6 +197,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.OnijiLoginByEmail(childComplexity, args["input"].(model.OnijiLoginByEmailInput)), true
+
+	case "Mutation.ONIJI_RefreshToken":
+		if e.complexity.Mutation.OnijiRefreshToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_ONIJI_RefreshToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.OnijiRefreshToken(childComplexity, args["input"].(model.OnijiRefreshTokenInput)), true
 
 	case "Mutation.ONIJI_SignupByEmail":
 		if e.complexity.Mutation.OnijiSignupByEmail == nil {
@@ -415,6 +429,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputOnijiCreateSessionInput,
 		ec.unmarshalInputOnijiEndSessionInput,
 		ec.unmarshalInputOnijiLoginByEmailInput,
+		ec.unmarshalInputOnijiRefreshTokenInput,
 		ec.unmarshalInputOnijiSignupByEmailInput,
 	)
 	first := true
@@ -572,6 +587,21 @@ func (ec *executionContext) field_Mutation_ONIJI_LoginByEmail_args(ctx context.C
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNOnijiLoginByEmailInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiLoginByEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_ONIJI_RefreshToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.OnijiRefreshTokenInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNOnijiRefreshTokenInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiRefreshTokenInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -885,6 +915,66 @@ func (ec *executionContext) fieldContext_Mutation_ONIJI_LoginByEmail(ctx context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_ONIJI_LoginByEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_ONIJI_RefreshToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_ONIJI_RefreshToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().OnijiRefreshToken(rctx, fc.Args["input"].(model.OnijiRefreshTokenInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.OnijiUserReponse)
+	fc.Result = res
+	return ec.marshalOOnijiUserReponse2ᚖgithubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiUserReponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_ONIJI_RefreshToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "error_code":
+				return ec.fieldContext_OnijiUserReponse_error_code(ctx, field)
+			case "error_message":
+				return ec.fieldContext_OnijiUserReponse_error_message(ctx, field)
+			case "user":
+				return ec.fieldContext_OnijiUserReponse_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type OnijiUserReponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_ONIJI_RefreshToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4354,6 +4444,33 @@ func (ec *executionContext) unmarshalInputOnijiLoginByEmailInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputOnijiRefreshTokenInput(ctx context.Context, obj interface{}) (model.OnijiRefreshTokenInput, error) {
+	var it model.OnijiRefreshTokenInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"refresh_token"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "refresh_token":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("refresh_token"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RefreshToken = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputOnijiSignupByEmailInput(ctx context.Context, obj interface{}) (model.OnijiSignupByEmailInput, error) {
 	var it model.OnijiSignupByEmailInput
 	asMap := map[string]interface{}{}
@@ -4476,6 +4593,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "ONIJI_LoginByEmail":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_ONIJI_LoginByEmail(ctx, field)
+			})
+		case "ONIJI_RefreshToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_ONIJI_RefreshToken(ctx, field)
 			})
 		case "ONIJI_CreateSession":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -5246,6 +5367,11 @@ func (ec *executionContext) unmarshalNOnijiEndSessionInput2githubᚗcomᚋhanzil
 
 func (ec *executionContext) unmarshalNOnijiLoginByEmailInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiLoginByEmailInput(ctx context.Context, v interface{}) (model.OnijiLoginByEmailInput, error) {
 	res, err := ec.unmarshalInputOnijiLoginByEmailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNOnijiRefreshTokenInput2githubᚗcomᚋhanziliᚋonijiᚑgoᚑserverᚋgraphᚋmodelᚐOnijiRefreshTokenInput(ctx context.Context, v interface{}) (model.OnijiRefreshTokenInput, error) {
+	res, err := ec.unmarshalInputOnijiRefreshTokenInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

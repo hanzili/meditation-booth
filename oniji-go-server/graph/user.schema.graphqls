@@ -43,6 +43,10 @@ type OnijiUserReponse {
   user: User
 }
 
+input OnijiRefreshTokenInput {
+  refresh_token: String!
+}
+
 extend type Query {
   ONIJI_User: OnijiUserReponse @auth
 }
@@ -50,4 +54,5 @@ extend type Query {
 type Mutation {
   ONIJI_SignupByEmail(input: OnijiSignupByEmailInput!): OnijiUserReponse
   ONIJI_LoginByEmail(input: OnijiLoginByEmailInput!): OnijiUserReponse
+  ONIJI_RefreshToken(input: OnijiRefreshTokenInput!): OnijiUserReponse
 }
