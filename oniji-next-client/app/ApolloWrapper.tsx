@@ -8,6 +8,10 @@ import {
   InMemoryCache,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support";
+import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { REFRESH_TOKEN } from "@/lib/gql";
+import { useMutation } from "@apollo/client";
 
 // have a function to create a client for you
 function makeClient() {
@@ -23,11 +27,51 @@ function makeClient() {
     // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
   });
 
+  const errorLink = onError(({ networkError, graphQLErrors, operation, forward }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(async ({ message, locations, path, extensions }) => {
+        if (extensions?.code === 'UNAUTHENTICATED') {
+          const refreshToken = localStorage.getItem('refresh_token');
+          if (!refreshToken) {
+            return;
+          }
+
+          const [refreshTokenMutation, { loading: refreshTokenLoading, error: refreshTokenError }] = useMutation(REFRESH_TOKEN);
+          const newToken = await refreshTokenMutation({ variables: { input: { refresh_token: refreshToken } } });
+          
+          if (newToken?.data?.refreshToken?.token) {
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('token', newToken.data.refreshToken.token);
+            }
+            operation.setContext({
+              headers: {
+                ...operation.getContext().headers,
+                authorization: `Bearer ${newToken}`,
+              },
+            });
+            return forward(operation);
+          }
+        }
+      });
+    }
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  });
+
   // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: httpLink,
+    link: ApolloLink.from([errorLink, authLink, httpLink]),
   });
 }
 

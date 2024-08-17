@@ -8,25 +8,25 @@ import { GET_USER } from "@/lib/gql";
 
 export default function Home() {
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(null);
+  // const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    console.log(storedToken);
-    if (!storedToken) {
-      router.push("/login");
-    } else {
-      setToken(storedToken);
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("token");
+  //   console.log(storedToken);
+  //   if (!storedToken) {
+  //     router.push("/login");
+  //   } else {
+  //     setToken(storedToken);
+  //   }
+  // }, [router]);
 
   const { loading, error, data } = useQuery(GET_USER, {
-    skip: !token, // Skip the query until token is available
-    context: {
-      headers: {
-        authorization: token,
-      },
-    },
+    // skip: !token, // Skip the query until token is available
+    // context: {
+    //   headers: {
+    //     authorization: token,
+    //   },
+    // },
   });
 
   const user = data?.ONIJI_User?.user;
