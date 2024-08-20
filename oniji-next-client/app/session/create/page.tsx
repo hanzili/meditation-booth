@@ -68,11 +68,6 @@ export default function SessionForm() {
       variables: {
         input: data,
       },
-      context: {
-        headers: {
-          authorization: token,
-        },
-      },
     });
 
     const sessionId = res.data.ONIJI_CreateSession.session.id;

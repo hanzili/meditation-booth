@@ -29,7 +29,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ApolloWrapper>
-              <div className="h-screen p-4">
+              <div className="h-screen p-4 bg-background">
                 <ModeToggle />
                 {children}
               </div>

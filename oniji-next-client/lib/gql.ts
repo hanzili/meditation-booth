@@ -133,3 +133,25 @@ export const REFRESH_TOKEN = gql`
     }
   }
 `;
+
+export const GET_SESSION = gql`
+  query ONIJI_GetSession($input: OnijiGetSessionInput!) {
+    ONIJI_GetSession(input: $input) {
+      error_code
+      error_message
+      session {
+        id
+        mood
+        session_type
+        has_scent
+        music {
+          url
+          name
+          duration
+        }
+        start_time
+        end_time
+      }
+    }
+  }
+`;

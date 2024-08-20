@@ -46,7 +46,7 @@ function makeClient() {
             operation.setContext({
               headers: {
                 ...operation.getContext().headers,
-                authorization: `Bearer ${newToken}`,
+                authorization: newToken,
               },
             });
             return forward(operation);
@@ -62,7 +62,7 @@ function makeClient() {
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token ? token : '',
       },
     };
   });
