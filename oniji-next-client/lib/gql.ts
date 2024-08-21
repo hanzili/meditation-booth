@@ -36,6 +36,22 @@ export const LOGIN_BY_EMAIL = gql`
   }
 `;
 
+export const RESET_PASSWORD = gql`
+  mutation ONIJI_ResetByEmail($input: OnijiResetByEmailInput!) {
+    ONIJI_ResetByEmail(input: $input) {
+      error_code
+      error_message
+      user {
+        id
+        email
+        token
+        refresh_token
+      }
+    }
+  }
+`;
+
+
 export const GET_USER = gql`
   query ONIJI_User {
     ONIJI_User {
