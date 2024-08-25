@@ -37,16 +37,10 @@ export const LOGIN_BY_EMAIL = gql`
 `;
 
 export const RESET_PASSWORD = gql`
-  mutation ONIJI_ResetByEmail($input: OnijiResetByEmailInput!) {
-    ONIJI_ResetByEmail(input: $input) {
+  mutation ONIJI_ResetPassword($input: OnijiResetPasswordInput!) {
+    ONIJI_ResetPassword(input: $input) {
       error_code
       error_message
-      user {
-        id
-        email
-        token
-        refresh_token
-      }
     }
   }
 `;
@@ -167,6 +161,23 @@ export const GET_SESSION = gql`
         }
         start_time
         end_time
+      }
+    }
+  }
+`;
+
+export const UPDATE_PASSWORD = gql`
+  mutation ONIJI_UpdateUser($input: OnijiUpdateUserInput!) {
+    ONIJI_UpdateUser(input: $input) {
+      error_code
+      error_message
+      user {
+        id
+        email
+        first_name
+        last_name
+        token
+        refresh_token
       }
     }
   }

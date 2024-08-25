@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_BY_EMAIL } from "@/lib/gql";
 
-export default function SignupForm() {
+export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
