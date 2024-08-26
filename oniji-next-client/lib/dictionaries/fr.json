@@ -1,0 +1,33 @@
+{
+  "HomePage": {
+      "Greeting": "Ravi de vous voir, {user?.first_name} !",
+      "StartMeditation": "Commencer la méditation",
+      "AskToStartMeditation": "Voulez-vous commencer une séance de méditation ?"
+  },
+  "LoginPage": {
+        "Email": "E-mail",
+        "Password": "Mot de passe",
+        "Login": "Connexion",
+        "Register": "S'inscrire",
+        "EnterYourEmailBelowToLoginToYourAccount": "Entrez votre e-mail ci-dessous pour vous connecter à votre compte",
+        "ResetPassword": "Réinitialiser mon mot de passe",
+        "ShowPassword": "Afficher le mot de passe",
+        "HidePassword": "Masquer le mot de passe",
+        "LoggingIn": "Connexion en cours..."
+    },
+    "SignupPage": {
+        "Title": "Inscription",
+        "Description": "Entrez vos informations pour créer un compte",
+        "FirstName": "Prénom",
+        "LastName": "Nom",
+        "Email": "E-mail",
+        "Password": "Mot de passe",
+        "ConfirmPassword": "Confirmer le mot de passe",
+        "SignUp": "S'inscrire",
+        "SigningUp": "Inscription en cours...",
+        "AlreadyHaveAnAccount": "Vous avez déjà un compte ?",
+        "SignIn": "Se connecter",
+        "ShowPassword": "Afficher le mot de passe",
+        "HidePassword": "Masquer le mot de passe"
+    }
+}

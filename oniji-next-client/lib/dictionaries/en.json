@@ -1,0 +1,33 @@
+{
+    "HomePage": {
+        "Greeting": "Nice to see you,",
+        "StartMeditation": "Start Meditation",
+        "AskToStartMeditation": "Would you like to start a meditation session?"
+    },
+    "LoginPage": {
+        "Email": "Email",
+        "Password": "Password",
+        "Login": "Login",
+        "Register": "Register",
+        "EnterYourEmailBelowToLoginToYourAccount": "Enter your email below to login to your account",
+        "ResetPassword": "Reset my password",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password",
+        "LoggingIn": "Logging in..."
+    },
+    "SignupPage": {
+        "Title": "Sign Up",
+        "Description": "Enter your information to create an account",
+        "FirstName": "First name",
+        "LastName": "Last name",
+        "Email": "Email",
+        "Password": "Password",
+        "ConfirmPassword": "Confirm password",
+        "SignUp": "Sign up",
+        "SigningUp": "Signing up...",
+        "AlreadyHaveAnAccount": "Already have an account?",
+        "SignIn": "Sign in",
+        "ShowPassword": "Show password",
+        "HidePassword": "Hide password"
+    }
+}

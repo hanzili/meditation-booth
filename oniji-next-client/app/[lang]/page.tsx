@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/lib/gql";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useDictionary } from "../../components/wrappers/dictionary-wrapper";
 
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
-
+  const dict: any = useDictionary();
+  
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
@@ -29,18 +31,18 @@ export default function Home() {
       <Card className="max-w-md w-full space-y-6 p-6">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">
-            Nice to see you, {user?.first_name}!
+            {dict.HomePage.Greeting} {user?.first_name}!
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <p className="text-muted-foreground">
-            Would you like to start a meditation session?
+            {dict.HomePage.AskToStartMeditation}
           </p>
           <Button
             className="w-full"
             onClick={() => router.push("/session/create")}
           >
-            Start Meditation
+            {dict.HomePage.StartMeditation}
           </Button>
         </CardContent>
       </Card>
