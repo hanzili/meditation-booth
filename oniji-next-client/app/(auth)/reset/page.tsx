@@ -50,7 +50,13 @@ export default function Reset() {
         },
       });
 
-      if (data.ONIJI_UpdateUser.error_code === 0) {
+      if (!(data?.ONIJI_UpdateUser?.error_code)) {
+        localStorage.setItem("token", data.ONIJI_UpdateUser.user.token);
+        localStorage.setItem(
+          "refresh_token",
+          data.ONIJI_UpdateUser.user.refresh_token
+        );
+
         setMessage(
           "Password reset successful! You can now log in with your new password."
         );
