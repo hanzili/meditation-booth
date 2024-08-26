@@ -40,7 +40,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function SessionForm() {
+export default function CreateSessionPage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
 

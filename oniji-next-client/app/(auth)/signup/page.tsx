@@ -16,11 +16,12 @@ import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_BY_EMAIL } from "@/lib/gql";
 
-export default function SignupForm() {
+export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cpassword, setcPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -38,6 +39,16 @@ export default function SignupForm() {
 
     if (!firstName.trim() || !lastName.trim()) {
       setErrorMessage("First name and last name cannot be empty.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setErrorMessage("Email cannot be empty.");
+      return;
+    }
+
+    if (password!== cpassword) {
+      setErrorMessage("Passwords entered are not identical")
       return;
     }
 
@@ -69,6 +80,8 @@ export default function SignupForm() {
       setErrorMessage("An error occurred during signup.");
     }
   };
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -118,15 +131,30 @@ export default function SignupForm() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Confirm Password</Label>
+              <Input
+                id="cpassword"
+                type={showPassword? 'text' :'password'}
+                value={cpassword}
+                onChange={(e) => setcPassword(e.target.value)}
                 required
               />
             </div>
             {errorMessage && (
               <p className="text-red-500 text-sm">{errorMessage}</p>
             )}
+            <div onClick={() => setShowPassword(!showPassword)}>
+              <p className="cursor-pointer hover:underline text-sm">
+                {showPassword ? "Hide password" : "Show password"}
+              </p>
+            </div>
             <Button
               type="submit"
               className="w-full"
