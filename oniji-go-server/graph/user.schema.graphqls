@@ -47,6 +47,17 @@ input OnijiRefreshTokenInput {
   refresh_token: String!
 }
 
+input OnijiResetPasswordInput {
+  email: String!
+}
+
+input OnijiUpdateUserInput {
+  first_name: String
+  last_name: String
+  language: Language
+  password: String
+}
+
 extend type Query {
   ONIJI_User: OnijiUserReponse @auth
 }
@@ -55,4 +66,7 @@ type Mutation {
   ONIJI_SignupByEmail(input: OnijiSignupByEmailInput!): OnijiUserReponse
   ONIJI_LoginByEmail(input: OnijiLoginByEmailInput!): OnijiUserReponse
   ONIJI_RefreshToken(input: OnijiRefreshTokenInput!): OnijiUserReponse
+  ONIJI_ResetPassword(input: OnijiResetPasswordInput!): OnijiUserReponse
+  ONIJI_SignOut: OnijiUserReponse @auth
+  ONIJI_UpdateUser(input: OnijiUpdateUserInput!): OnijiUserReponse @auth
 }

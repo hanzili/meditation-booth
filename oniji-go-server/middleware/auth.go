@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hanzili/oniji-go-server/config"
@@ -23,6 +24,9 @@ func GqlAuthRequired() gin.HandlerFunc {
 				res, err := client.Auth.GetUser()
 				if err == nil {
 					c.Request = c.Request.WithContext(context.WithValue(c.Request.Context(), constants.CtxKeyUserId, res.User.ID.String()))
+					c.Request = c.Request.WithContext(context.WithValue(c.Request.Context(), constants.CtxKeyAuthorization, authorizationToken))
+				} else {
+					fmt.Printf("error in verifying user token: %v", err)
 				}
 			}
 		}

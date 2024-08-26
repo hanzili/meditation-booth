@@ -56,8 +56,13 @@ input OnijiEndSessionInput {
     id: String!
 }
 
+input OnijiGetSessionInput {
+    id: String!
+}
+
 extend type Query {
   ONIJI_GetSessions: OnijiSessionsResponse @auth
+  ONIJI_GetSession(input: OnijiGetSessionInput!): OnijiSessionReponse @auth
 }
 
 extend type Mutation {

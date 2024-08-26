@@ -99,3 +99,15 @@ func (r *queryResolver) OnijiGetSessions(ctx context.Context) (*model.OnijiSessi
 		TotalCount: len(sessions), //TODO: return total count
 	}, nil
 }
+
+// OnijiGetSession is the resolver for the ONIJI_GetSession field.
+func (r *queryResolver) OnijiGetSession(ctx context.Context, input model.OnijiGetSessionInput) (*model.OnijiSessionReponse, error) {
+	session, err := repositories.SessionRepo.GetById(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.OnijiSessionReponse{
+		Session: convertToGqlSession(session),
+	}, nil
+}

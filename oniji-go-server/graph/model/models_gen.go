@@ -30,6 +30,10 @@ type OnijiEndSessionInput struct {
 	ID string `json:"id"`
 }
 
+type OnijiGetSessionInput struct {
+	ID string `json:"id"`
+}
+
 type OnijiLoginByEmailInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -37,6 +41,10 @@ type OnijiLoginByEmailInput struct {
 
 type OnijiRefreshTokenInput struct {
 	RefreshToken string `json:"refresh_token"`
+}
+
+type OnijiResetPasswordInput struct {
+	Email string `json:"email"`
 }
 
 type OnijiSessionReponse struct {
@@ -64,6 +72,13 @@ type OnijiSignupByEmailInput struct {
 	Password  string `json:"password"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
+}
+
+type OnijiUpdateUserInput struct {
+	FirstName *string   `json:"first_name,omitempty"`
+	LastName  *string   `json:"last_name,omitempty"`
+	Language  *Language `json:"language,omitempty"`
+	Password  *string   `json:"password,omitempty"`
 }
 
 type OnijiUserReponse struct {
