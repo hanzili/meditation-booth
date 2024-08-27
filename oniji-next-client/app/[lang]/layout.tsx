@@ -37,7 +37,7 @@ export default async function RootLayout({
           >
             <ApolloWrapper>
               <DictionaryProvider dict={dict}>
-                <div className="h-screen p-4 bg-background">
+                <div className="h-screen px-4 py-6 bg-background">
                   <div className="flex items-center justify-between">
                     <ModeToggle />
                     <LanguageSwitcher locale={params.lang} />
