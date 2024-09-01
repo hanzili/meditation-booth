@@ -1,9 +1,11 @@
 {
   "HomePage": {
-      "Greeting": "Ravi de vous voir, {user?.first_name} !",
+      "Greeting": "Ravi de vous voir, ",
       "StartMeditation": "Commencer la méditation",
-      "AskToStartMeditation": "Voulez-vous commencer une séance de méditation ?"
-  },
+      "AskToStartMeditation": "Voulez-vous commencer une séance de méditation ?",
+      "SessionHistory": "Historique des séances",
+      "NoSessions": "Aucune séance pour le moment"
+    },
   "LoginPage": {
         "Email": "E-mail",
         "Password": "Mot de passe",

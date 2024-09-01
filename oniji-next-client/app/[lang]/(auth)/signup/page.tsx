@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/hooks/use-localized";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [cpassword, setcPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   const [signupByEmail, { loading, error }] = useMutation(SIGNUP_BY_EMAIL);
 

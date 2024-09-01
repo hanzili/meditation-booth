@@ -27,7 +27,7 @@ import {
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useMutation } from "@apollo/client";
 import { CREATE_SESSION } from "@/lib/gql";
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/hooks/use-localized";
 import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
@@ -41,7 +41,7 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>;
 
 export default function CreateSessionPage() {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {

@@ -2,7 +2,9 @@
     "HomePage": {
         "Greeting": "Nice to see you,",
         "StartMeditation": "Start Meditation",
-        "AskToStartMeditation": "Would you like to start a meditation session?"
+        "AskToStartMeditation": "Would you like to start a meditation session?",
+        "SessionHistory": "Session History",
+        "NoSessions": "No sessions yet"
     },
     "LoginPage": {
         "Email": "Email",

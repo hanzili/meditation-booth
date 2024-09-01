@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/hooks/use-localized";
 import { useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +16,7 @@ export default function Reset() {
   const [message, setMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const router = useRouter();
+  const router = useLocalizedRouter();
 
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));

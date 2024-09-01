@@ -9,7 +9,9 @@ export default function LanguageSwitcher({ locale }: { locale: string }) {
 
   const handleLanguageChange = (newLanguage: string) => {
     localStorage.setItem('language', newLanguage)
-    router.push(window.location.pathname.replace(`/${locale}`, `/${newLanguage}`))
+    const currentPath = window.location.pathname
+    const newPath = currentPath.replace(/^\/[^\/]+/, `/${newLanguage}`)
+    router.push(newPath)
   }
 
   return (

@@ -25,30 +25,29 @@ export default async function RootLayout({
   const dict = await getDictionary(params.lang);
 
   return (
-    <>
-      <html lang={params.lang} suppressHydrationWarning>
-        <head />
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ApolloWrapper>
-              <DictionaryProvider dict={dict}>
-                <div className="h-screen px-4 py-6 bg-background">
-                  <div className="flex items-center justify-between">
-                    <ModeToggle />
-                    <LanguageSwitcher locale={params.lang} />
-                  </div>
-                  {children}
+    <html lang={params.lang} suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ApolloWrapper>
+            <DictionaryProvider dict={dict}>
+              <div className="min-h-screen flex flex-col px-4 py-6 bg-background">
+                <div className="flex items-center justify-between mb-6">
+                  <ModeToggle />
+                  <LanguageSwitcher locale={params.lang} />
                 </div>
-              </DictionaryProvider>
-            </ApolloWrapper>
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
+                <main className="flex-grow flex items-center justify-center">
+                  {children}
+                </main>
+              </div>
+            </DictionaryProvider>
+          </ApolloWrapper>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
