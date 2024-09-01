@@ -182,3 +182,12 @@ export const UPDATE_PASSWORD = gql`
     }
   }
 `;
+
+export const UPDATE_SESSION = gql`
+  mutation ONIJI_UpdateSession($input: OnijiUpdateSessionInput!) {
+    ONIJI_UpdateSession(input: $input) {
+      error_code
+      error_message
+    }
+  }
+`;
