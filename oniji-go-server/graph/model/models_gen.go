@@ -74,6 +74,11 @@ type OnijiSignupByEmailInput struct {
 	LastName  string `json:"last_name"`
 }
 
+type OnijiUpdateSessionInput struct {
+	ID     string `json:"id"`
+	Survey string `json:"survey"`
+}
+
 type OnijiUpdateUserInput struct {
 	FirstName *string   `json:"first_name,omitempty"`
 	LastName  *string   `json:"last_name,omitempty"`
@@ -110,6 +115,8 @@ type Session struct {
 	EndTime *string `json:"end_time,omitempty"`
 	// music
 	Music *Music `json:"music"`
+	// survey
+	Survey *string `json:"survey,omitempty"`
 }
 
 type User struct {

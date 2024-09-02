@@ -86,6 +86,36 @@ func (r *mutationResolver) OnijiEndSession(ctx context.Context, input model.Onij
 	}, nil
 }
 
+// OnijiUpdateSession is the resolver for the ONIJI_UpdateSession field.
+func (r *mutationResolver) OnijiUpdateSession(ctx context.Context, input model.OnijiUpdateSessionInput) (*model.OnijiSessionReponse, error) {
+	userId := ctx.Value(constants.CtxKeyUserId).(string)
+
+	session, err := repositories.SessionRepo.GetById(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if userId != session.UserId.String() {
+		errorCode := 401
+		errorMsg := "You can only update session of your own"
+		return &model.OnijiSessionReponse{
+			ErrorCode:    &errorCode,
+			ErrorMessage: &errorMsg,
+			Session:      nil,
+		}, nil
+	}
+
+	session.Survey = input.Survey
+	err = repositories.SessionRepo.Update(session)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.OnijiSessionReponse{
+		Session: convertToGqlSession(session),
+	}, nil
+}
+
 // OnijiGetSessions is the resolver for the ONIJI_GetSessions field.
 func (r *queryResolver) OnijiGetSessions(ctx context.Context) (*model.OnijiSessionsResponse, error) {
 	userId := ctx.Value(constants.CtxKeyUserId).(string)
@@ -102,12 +132,23 @@ func (r *queryResolver) OnijiGetSessions(ctx context.Context) (*model.OnijiSessi
 
 // OnijiGetSession is the resolver for the ONIJI_GetSession field.
 func (r *queryResolver) OnijiGetSession(ctx context.Context, input model.OnijiGetSessionInput) (*model.OnijiSessionReponse, error) {
+	// check if the user is the owner of the session
+	userId := ctx.Value(constants.CtxKeyUserId).(string)
+
 	session, err := repositories.SessionRepo.GetById(input.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.OnijiSessionReponse{
-		Session: convertToGqlSession(session),
-	}, nil
+	if userId != session.UserId.String() {
+		errorCode := 401
+		errorMsg := "You can only get session of your own"
+		return &model.OnijiSessionReponse{
+			ErrorCode:    &errorCode,
+			ErrorMessage: &errorMsg,
+			Session:      nil,
+		}, nil
+	}
+
+	return &model.OnijiSessionReponse{Session: convertToGqlSession(session)}, nil
 }

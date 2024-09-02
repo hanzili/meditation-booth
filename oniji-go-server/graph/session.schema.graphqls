@@ -24,6 +24,8 @@ type Session {
     end_time: String
     "music"
     music: Music!
+    "survey"
+    survey: String
 }
 
 type OnijiSessionReponse {
@@ -56,6 +58,11 @@ input OnijiEndSessionInput {
     id: String!
 }
 
+input OnijiUpdateSessionInput {
+    id: String!
+    survey: String!
+}
+
 input OnijiGetSessionInput {
     id: String!
 }
@@ -68,4 +75,5 @@ extend type Query {
 extend type Mutation {
   ONIJI_CreateSession(input: OnijiCreateSessionInput!): OnijiSessionReponse @auth
   ONIJI_EndSession(input: OnijiEndSessionInput!): OnijiSessionReponse @auth
+  ONIJI_UpdateSession(input: OnijiUpdateSessionInput!): OnijiSessionReponse @auth
 }
