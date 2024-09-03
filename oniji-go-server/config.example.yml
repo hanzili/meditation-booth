@@ -18,3 +18,5 @@ REDIS:
 SUPABASE:
   URL: example
   ANON_KEY: example
+
+BOOTH_URL: example

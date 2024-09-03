@@ -36,7 +36,6 @@ func convertToGqlSession(session *models.Session) *model.Session {
 		HasScent:    session.HasScent,
 		Music: &model.Music{
 			Name:     &session.Music.Name,
-			URL:      &session.Music.Url,
 			Duration: &session.Music.Duration,
 		},
 	}

@@ -6,13 +6,18 @@ package graph
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hanzili/oniji-go-server/config"
 	"github.com/hanzili/oniji-go-server/constants"
 	"github.com/hanzili/oniji-go-server/graph/model"
 	"github.com/hanzili/oniji-go-server/models"
 	"github.com/hanzili/oniji-go-server/repositories"
+	"github.com/hanzili/oniji-go-server/utils"
+	log "github.com/sirupsen/logrus"
 )
 
 // OnijiCreateSession is the resolver for the ONIJI_CreateSession field.
@@ -26,17 +31,13 @@ func (r *mutationResolver) OnijiCreateSession(ctx context.Context, input model.O
 		UserId:      uuid.MustParse(userId),
 	}
 	// find the mapping for the session
-	mockMusic := &models.Music{
-		Name:     "mock",
-		Url:      "mock",
-		Duration: 120, // seconds
+	musicInfo := utils.MusicInfo{
+		Mood:        utils.Mood(input.Mood),
+		SessionType: models.SessionType(input.SessionType),
+		Language:    input.Language,
+		IsLong:      input.IsLong,
 	}
-	session.Music = *mockMusic
-
-	// start the session
-	// start detecting brave wave
-	// start defusing the scent
-	// start the music
+	session.Music = utils.GetMusicForSession(musicInfo)
 
 	// get current time
 	timeNow := time.Now()
@@ -44,6 +45,27 @@ func (r *mutationResolver) OnijiCreateSession(ctx context.Context, input model.O
 	err := repositories.SessionRepo.Create(session)
 	if err != nil {
 		return nil, err
+	}
+
+	// start the session
+	// start detecting brave wave
+	// start defusing the scent
+	// start the music
+	// Send HTTP request to booth server
+	sessionId := session.Id.String()
+	musicName := session.Music.Name
+	boothServerURL := fmt.Sprintf("%s/start-session/%s/%s", config.GetConfig().BoothUrl, sessionId, musicName)
+	resp, err := http.Get(boothServerURL)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err.Error(),
+		}).Error("failed to start session on booth server")
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to start session on booth server, status code: %d", resp.StatusCode)
 	}
 
 	return &model.OnijiSessionReponse{
@@ -73,6 +95,26 @@ func (r *mutationResolver) OnijiEndSession(ctx context.Context, input model.Onij
 	// stop detecting brave wave
 	// stop defusing the scent
 	// stop the music
+	sessionId := session.Id.String()
+	boothServerURL := fmt.Sprintf("%s/end-session/%s", config.GetConfig().BoothUrl, sessionId)
+	resp, err := http.Get(boothServerURL)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"sessionId": sessionId,
+			"response":  resp,
+			"error":     err.Error(),
+		}).Error("failed to end session on booth server")
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.WithFields(log.Fields{
+			"sessionId": sessionId,
+			"response":  resp,
+		}).Error("failed to end session on booth server")
+		return nil, fmt.Errorf("failed to end session on booth server, status code: %d", resp.StatusCode)
+	}
 
 	timeNow := time.Now()
 	session.EndTime = &timeNow

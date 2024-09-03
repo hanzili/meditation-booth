@@ -11,8 +11,6 @@ import (
 type Music struct {
 	// name
 	Name *string `json:"name,omitempty"`
-	// url
-	URL *string `json:"url,omitempty"`
 	// duration
 	Duration *int `json:"duration,omitempty"`
 }
@@ -24,6 +22,8 @@ type OnijiCreateSessionInput struct {
 	Mood        string `json:"mood"`
 	SessionType string `json:"session_type"`
 	HasScent    bool   `json:"has_scent"`
+	Language    string `json:"language"`
+	IsLong      bool   `json:"is_long"`
 }
 
 type OnijiEndSessionInput struct {

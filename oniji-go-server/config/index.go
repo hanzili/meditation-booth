@@ -19,6 +19,7 @@ type Config struct {
 	PostgresConfig *PostgresConfig `validate:"required"`
 	RedisConfig    *RedisConfig
 	SupabaseConfig *SupabaseConfig
+	BoothUrl       string `validate:"required"`
 }
 
 func NewConfig() *Config {
@@ -31,6 +32,7 @@ func NewConfig() *Config {
 		PostgresConfig: postgresConfig,
 		RedisConfig:    redisConfig,
 		SupabaseConfig: supabaseConfig,
+		BoothUrl:       strings.Trim(viper.GetString("BOOTH_URL"), " "),
 	}
 
 	return config

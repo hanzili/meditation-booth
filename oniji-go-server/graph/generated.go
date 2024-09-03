@@ -51,7 +51,6 @@ type ComplexityRoot struct {
 	Music struct {
 		Duration func(childComplexity int) int
 		Name     func(childComplexity int) int
-		URL      func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -165,13 +164,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Music.Name(childComplexity), true
-
-	case "Music.url":
-		if e.complexity.Music.URL == nil {
-			break
-		}
-
-		return e.complexity.Music.URL(childComplexity), true
 
 	case "Mutation.ONIJI_CreateSession":
 		if e.complexity.Mutation.OnijiCreateSession == nil {
@@ -844,47 +836,6 @@ func (ec *executionContext) _Music_name(ctx context.Context, field graphql.Colle
 }
 
 func (ec *executionContext) fieldContext_Music_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Music",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Music_url(ctx context.Context, field graphql.CollectedField, obj *model.Music) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Music_url(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Music_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Music",
 		Field:      field,
@@ -2769,8 +2720,6 @@ func (ec *executionContext) fieldContext_Session_music(ctx context.Context, fiel
 			switch field.Name {
 			case "name":
 				return ec.fieldContext_Music_name(ctx, field)
-			case "url":
-				return ec.fieldContext_Music_url(ctx, field)
 			case "duration":
 				return ec.fieldContext_Music_duration(ctx, field)
 			}
@@ -4900,7 +4849,7 @@ func (ec *executionContext) unmarshalInputOnijiCreateSessionInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"mood", "session_type", "has_scent"}
+	fieldsInOrder := [...]string{"mood", "session_type", "has_scent", "language", "is_long"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4928,6 +4877,20 @@ func (ec *executionContext) unmarshalInputOnijiCreateSessionInput(ctx context.Co
 				return it, err
 			}
 			it.HasScent = data
+		case "language":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Language = data
+		case "is_long":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_long"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IsLong = data
 		}
 	}
 
@@ -5227,8 +5190,6 @@ func (ec *executionContext) _Music(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = graphql.MarshalString("Music")
 		case "name":
 			out.Values[i] = ec._Music_name(ctx, field, obj)
-		case "url":
-			out.Values[i] = ec._Music_url(ctx, field, obj)
 		case "duration":
 			out.Values[i] = ec._Music_duration(ctx, field, obj)
 		default:
