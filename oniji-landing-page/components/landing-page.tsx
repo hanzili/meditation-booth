@@ -27,10 +27,10 @@ export function LandingPage(): JSX.Element {
   return (
     <div className="flex flex-col min-h-[100dvh] a">
       <header className="px-4 lg:px-6 h-14 flex items-center">
-        <Link href="/" className="flex items-center justify-center">
+        {/* <Link href="/" className="flex items-center justify-center">
           <CodeIcon className="h-24 w-32" />
           <span className="sr-only">Oniji</span>
-        </Link>
+        </Link> */}
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
             Features
@@ -86,7 +86,7 @@ export function LandingPage(): JSX.Element {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="text-center mb-12">
               <div className="inline-block rounded-lg bg-background px-3 py-1 text-sm text-primary mb-4">Key Features</div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Unlock Your Mind's Potential</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Unlock Your Mind&apos;s Potential</h2>
               <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
                 Our futuristic egg-shaped booth uses cutting-edge technology to guide you through a personalized
                 meditation session, helping you recharge and rejuvenate.
@@ -94,9 +94,11 @@ export function LandingPage(): JSX.Element {
             </div>
             
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              <img
+              <Image
                 src="/booth.webp"
                 alt="Oniji Features"
+                width={450}
+                height={450}
                 className="w-full max-w-[450px] mx-auto rounded-xl object-cover object-center md:order-last"
               />
               <div className="space-y-8">
@@ -142,10 +144,10 @@ export function LandingPage(): JSX.Element {
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
               <div className="flex flex-col items-center justify-center space-y-2">
-                <img
+                <Image
                   src="/mcgill.png"
-                  width="120"
-                  height="120"
+                  width={120}
+                  height={120}
                   alt="McGill University"
                   className="aspect-square object-contain"
                 />
@@ -153,10 +155,10 @@ export function LandingPage(): JSX.Element {
                 <p className="text-muted-foreground">Collaboration with leading neuroscience experts</p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2">
-                <img
+                <Image
                   src="/neurosity.png"
-                  width="120"
-                  height="120"
+                  width={120}
+                  height={120}
                   alt="Neurosity"
                   className="aspect-square object-contain"
                 />
@@ -164,10 +166,10 @@ export function LandingPage(): JSX.Element {
                 <p className="text-muted-foreground">Cutting-edge brainwave detection technology</p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2">
-                <img
+                <Image
                   src="/meditation.png"
-                  width="120"
-                  height="120"
+                  width={120}
+                  height={120}
                   alt="Published Papers"
                   className="aspect-square object-contain"
                 />
