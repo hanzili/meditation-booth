@@ -59,7 +59,7 @@ export function LandingPage(): JSX.Element {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
-                    href="#contact"
+                    href="https://cal.com/oniji"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   >
                     Book Now
@@ -252,7 +252,9 @@ export function LandingPage(): JSX.Element {
                   placeholder="Enter your email" 
                   className="max-w-lg flex-1 bg-background border-2 border-primary focus:ring-2 focus:ring-primary" 
                 />
-                <Button type="submit">Book Now</Button>
+                <Link href="https://cal.com/oniji">
+                  <Button type="button">Book Now</Button>
+                </Link>
               </form>
               <p className="text-xs text-muted-foreground">
                 Sign up to get notified about our latest updates.{" "}
