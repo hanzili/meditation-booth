@@ -53,8 +53,7 @@ export function LandingPage(): JSX.Element {
                     Recharge Your Mind with Oniji
                   </h1>
                   <p className="max-w-[600px] text-foreground/80 md:text-xl mb-5">
-                    Experience a unique meditation session in our futuristic egg-shaped booth, designed to help you
-                    relax and recharge in the modern world.
+                  Step into Open Booth® for a one-of-a-kind relaxation experience. Recharge, and unwind in a space designed to bring mindfulness into the fast-paced modern world.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -64,12 +63,12 @@ export function LandingPage(): JSX.Element {
                   >
                     Book Now
                   </Link>
-                  <Link
+                  {/* <Link
                     href="#contact"
                     className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   >
                     Learn More
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               {/* <img
@@ -85,9 +84,9 @@ export function LandingPage(): JSX.Element {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="text-center mb-12">
               <div className="inline-block rounded-lg bg-background px-3 py-1 text-sm text-primary mb-4">Key Features</div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Unlock Your Mind&apos;s Potential</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl mb-4">Unlock Your Mind&apos;s Potential</h2>
               <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-                Our futuristic egg-shaped booth uses cutting-edge technology to guide you through a personalized
+                Our futuristic meditation booth uses cutting-edge technology to guide you through a personalized
                 meditation session, helping you recharge.
               </p>
             </div>
@@ -112,7 +111,7 @@ export function LandingPage(): JSX.Element {
                   },
                   {
                     title: "Personalized Therapy",
-                    description: "Our experts analyze your brainwave data to provide a customized meditation experience tailored to your needs."
+                    description: "Our experts analyze your brainwave data to provide a customized meditation experience tailored to your emotional state."
                   }
                 ].map((feature, index) => (
                   <div key={index} className="flex items-start space-x-4">
@@ -129,18 +128,17 @@ export function LandingPage(): JSX.Element {
             </div>
           </div>
         </section>
-        <section id="partners" className="w-full py-12 md:py-24 lg:py-32 bg-background flex justify-center items-center">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-xl text-primary">Our Partners</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Collaborating with Industry Leaders</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Oniji has partnered with renowned experts and hardware providers to bring you the best possible
-                  meditation experience.
-                </p>
-              </div>
+        <section id="partners" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+          <div className="container px-4 md:px-6 mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-primary mb-4">Our Partners</div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl mb-4">Collaborating with Industry Leaders</h2>
+              <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+                Oniji has partnered with renowned experts and hardware providers to bring you the best possible
+                meditation experience.
+              </p>
             </div>
+            
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
               <div className="flex flex-col items-center justify-center space-y-2">
                 <Image
@@ -172,7 +170,7 @@ export function LandingPage(): JSX.Element {
                   alt="Published Papers"
                   className="aspect-square object-contain"
                 />
-                <p className="text-lg font-bold">Based on Research Papers</p>
+                <p className="text-lg font-bold">Based on Research</p>
                 <p className="text-muted-foreground">Research-backed meditation techniques</p>
               </div>
             </div>
@@ -245,22 +243,10 @@ export function LandingPage(): JSX.Element {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
-              <form className="flex gap-2">
-                <Input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  className="max-w-lg flex-1 bg-background border-2 border-primary focus:ring-2 focus:ring-primary" 
-                />
-                <Link href="https://cal.com/oniji">
-                  <Button type="button">Book Now</Button>
-                </Link>
-              </form>
-              <p className="text-xs text-muted-foreground">
-                Sign up to get notified about our latest updates.{" "}
-                <Link href="#" className="underline underline-offset-2">
-                  Terms &amp; Conditions
-                </Link>
-              </p>
+              <Link href="https://cal.com/oniji" className="w-full">
+                <Button type="button" className="w-full py-6 text-lg">Book Your Session Now</Button>
+              </Link>
+              
             </div>
           </div>
         </section>
