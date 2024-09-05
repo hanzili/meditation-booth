@@ -72,13 +72,12 @@ export function LandingPage(): JSX.Element {
                   </Link>
                 </div>
               </div>
-              {/* <img
-                src="/meditation.webp"
+              <img
+                src="/meditate.gif"
                 width="550"
                 height="550"
                 alt="Oniji Booth"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
-              /> */}
+                className="hidden lg:block mx-auto aspect-square overflow-hidden rounded-xl object-cover lg:order-last w-64 max-w-full"              />
             </div>
           </div>
         </section>
@@ -89,7 +88,7 @@ export function LandingPage(): JSX.Element {
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Unlock Your Mind&apos;s Potential</h2>
               <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
                 Our futuristic egg-shaped booth uses cutting-edge technology to guide you through a personalized
-                meditation session, helping you recharge and rejuvenate.
+                meditation session, helping you recharge.
               </p>
             </div>
             
@@ -134,7 +133,7 @@ export function LandingPage(): JSX.Element {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-primary">Our Partners</div>
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-xl text-primary">Our Partners</div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Collaborating with Industry Leaders</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Oniji has partnered with renowned experts and hardware providers to bring you the best possible
@@ -152,7 +151,7 @@ export function LandingPage(): JSX.Element {
                   className="aspect-square object-contain"
                 />
                 <p className="text-lg font-bold">McGill University</p>
-                <p className="text-muted-foreground">Collaboration with leading neuroscience experts</p>
+                <p className="text-muted-foreground text-center ">Collaboration with leading psychology experts</p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2">
                 <Image
@@ -163,7 +162,7 @@ export function LandingPage(): JSX.Element {
                   className="aspect-square object-contain"
                 />
                 <p className="text-lg font-bold">Neurosity</p>
-                <p className="text-muted-foreground">Cutting-edge brainwave detection technology</p>
+                <p className="text-muted-foreground text-center ">Cutting-edge brainwave detection technology</p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2">
                 <Image
@@ -173,7 +172,7 @@ export function LandingPage(): JSX.Element {
                   alt="Published Papers"
                   className="aspect-square object-contain"
                 />
-                <p className="text-lg font-bold">Published Papers</p>
+                <p className="text-lg font-bold">Based on Research Papers</p>
                 <p className="text-muted-foreground">Research-backed meditation techniques</p>
               </div>
             </div>
