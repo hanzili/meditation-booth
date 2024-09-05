@@ -59,6 +59,8 @@ export function LandingPage(): JSX.Element {
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
                     href="https://cal.com/oniji"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   >
                     Book Now
@@ -243,7 +245,7 @@ export function LandingPage(): JSX.Element {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
-              <Link href="https://cal.com/oniji" className="w-full">
+              <Link href="https://cal.com/oniji" target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button type="button" className="w-full py-6 text-lg">Book Your Session Now</Button>
               </Link>
               
