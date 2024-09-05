@@ -27,10 +27,10 @@ export function LandingPage(): JSX.Element {
   return (
     <div className="flex flex-col min-h-[100dvh] a">
       <header className="px-4 lg:px-6 h-14 flex items-center">
-        {/* <Link href="/" className="flex items-center justify-center">
-          <CodeIcon className="h-24 w-32" />
+        { <Link href="/" className="flex items-center justify-center">
+          <img src="/logo.png" className="h-24 w-32 flex" />
           <span className="sr-only">Oniji</span>
-        </Link> */}
+        </Link>}
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
             Features
@@ -72,12 +72,12 @@ export function LandingPage(): JSX.Element {
                   </Link>
                 </div>
               </div>
-              <img
+              {/* <img
                 src="/meditate.gif"
                 width="550"
                 height="550"
                 alt="Oniji Booth"
-                className="hidden lg:block mx-auto aspect-square overflow-hidden rounded-xl object-cover lg:order-last w-64 max-w-full"              />
+                className="hidden lg:block mx-auto aspect-square overflow-hidden rounded-xl object-cover lg:order-last w-64 max-w-full"              /> */}
             </div>
           </div>
         </section>
