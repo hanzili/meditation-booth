@@ -72,7 +72,6 @@ export const CREATE_SESSION = gql`
         session_type
         has_scent
         music {
-          url
           name
           duration
         }
@@ -94,7 +93,6 @@ export const END_SESSION = gql`
         session_type
         has_scent
         music {
-          url
           name
           duration
         }
@@ -116,7 +114,6 @@ export const GET_SESSIONS = gql`
         session_type
         has_scent
         music {
-          url
           name
           duration
         }
@@ -155,7 +152,6 @@ export const GET_SESSION = gql`
         session_type
         has_scent
         music {
-          url
           name
           duration
         }

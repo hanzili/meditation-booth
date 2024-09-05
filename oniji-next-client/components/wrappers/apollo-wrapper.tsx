@@ -1,60 +1,20 @@
 "use client";
 // ^ this file needs the "use client" pragma
 
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloLink, HttpLink, from, Observable } from "@apollo/client";
 import {
   ApolloNextAppProvider,
   ApolloClient,
   InMemoryCache,
-  SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support";
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { REFRESH_TOKEN } from "@/lib/gql";
-import { useMutation } from "@apollo/client";
 
-// have a function to create a client for you
 function makeClient() {
   const httpLink = new HttpLink({
-    // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri: "http://localhost:8080/query",
-    // you can disable result caching here if you want to
-    // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
     fetchOptions: { cache: "no-store" },
-    // you can override the default `fetchOptions` on a per query basis
-    // via the `context` property on the options passed as a second argument
-    // to an Apollo Client data fetching hook, e.g.:
-    // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
-  });
-
-  const errorLink = onError(({ networkError, graphQLErrors, operation, forward }) => {
-    if (graphQLErrors) {
-      graphQLErrors.forEach(async ({ message, locations, path, extensions }) => {
-        if (extensions?.code === 'UNAUTHENTICATED') {
-          const refreshToken = localStorage.getItem('refresh_token');
-          if (!refreshToken) {
-            return;
-          }
-
-          const [refreshTokenMutation, { loading: refreshTokenLoading, error: refreshTokenError }] = useMutation(REFRESH_TOKEN);
-          const newToken = await refreshTokenMutation({ variables: { input: { refresh_token: refreshToken } } });
-          
-          if (newToken?.data?.refreshToken?.token) {
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('token', newToken.data.refreshToken.token);
-            }
-            operation.setContext({
-              headers: {
-                ...operation.getContext().headers,
-                authorization: newToken,
-              },
-            });
-            return forward(operation);
-          }
-        }
-      });
-    }
-    if (networkError) console.log(`[Network error]: ${networkError}`);
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -67,15 +27,58 @@ function makeClient() {
     };
   });
 
-  // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
-  return new ApolloClient({
-    // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
-    cache: new InMemoryCache(),
-    link: ApolloLink.from([errorLink, authLink, httpLink]),
+  const errorLink = onError(({ graphQLErrors, operation, forward }) => {
+    if (graphQLErrors) {
+      for (let err of graphQLErrors) {
+        if (err.message === 'unauthorized') {
+          return new Observable(observer => {
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+              observer.error(err);
+              return;
+            }
+
+            client.mutate({
+              mutation: REFRESH_TOKEN,
+              variables: { input: { refresh_token: refreshToken } },
+            }).then(({ data }) => {
+              if (data?.ONIJI_RefreshToken?.user?.token) {
+                const newToken = data.ONIJI_RefreshToken.user.token;
+                localStorage.setItem('token', newToken);
+                
+                // Retry the failed request
+                const oldHeaders = operation.getContext().headers;
+                operation.setContext({
+                  headers: {
+                    ...oldHeaders,
+                    authorization: newToken,
+                  },
+                });
+                forward(operation).subscribe({
+                  next: observer.next.bind(observer),
+                  error: observer.error.bind(observer),
+                  complete: observer.complete.bind(observer)
+                });
+              } else {
+                observer.error(err);
+              }
+            }).catch(() => {
+              observer.error(err);
+            });
+          });
+        }
+      }
+    }
   });
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: from([errorLink, authLink, httpLink]),
+  });
+
+  return client;
 }
 
-// you need to create a component to wrap your app in
 export function ApolloWrapper({ children }: React.PropsWithChildren) {
   return (
     <ApolloNextAppProvider makeClient={makeClient}>

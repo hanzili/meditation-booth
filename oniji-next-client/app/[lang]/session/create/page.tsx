@@ -36,11 +36,14 @@ const FormSchema = z.object({
   has_scent: z.boolean().refine((val) => val === true || val === false, {
     message: "Please select your scent preference.",
   }),
+  is_long: z.boolean().refine((val) => val === true || val === false, {
+    message: "Please select your preferred session length.",
+  }),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
 
-export default function CreateSessionPage() {
+export default function CreateSessionPage({ params }: { params: { lang: string } }) {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
 
@@ -66,7 +69,10 @@ export default function CreateSessionPage() {
     
     const res = await createSession({
       variables: {
-        input: data,
+        input: {
+          ...data,
+          language: params.lang,
+        },
       },
     });
 
@@ -175,6 +181,43 @@ export default function CreateSessionPage() {
                 </FormItem>
               )}
             />
+
+            {/* Session Length Preference */}
+            <FormField
+              control={form.control}
+              name="is_long"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Session Length</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center">
+                      <Label className="flex items-center mr-8">
+                        <Input
+                          type="radio"
+                          value="true"
+                          checked={field.value === true}
+                          onChange={() => field.onChange(true)}
+                          className="w-fit mr-2"
+                        />
+                        Long (more than 10 minutes)
+                      </Label>
+                      <Label className="flex items-center">
+                        <Input
+                          type="radio"
+                          value="false"
+                          checked={field.value === false}
+                          onChange={() => field.onChange(false)}
+                          className="w-fit mr-2"
+                        />
+                        Short (5-10 minutes)
+                      </Label>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit" disabled={loading}>
               {loading ? "Starting..." : "Start"}
             </Button>
