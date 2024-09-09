@@ -1,8 +1,21 @@
-import Image from "next/image";
-import { LandingPage } from "@/components/landing-page";
+import Header from '@/components/header'
+import Hero from '@/components/hero'
+import Features from '@/components/features'
+import Partners from '@/components/partners'
+import Contact from '@/components/contact'
+import Footer from '@/components/footer'
 
-export default function Home() {
+export default function LandingPage(): JSX.Element {
   return (
-    <LandingPage />
-  );
+    <div className="flex flex-col min-h-[100dvh]">
+      <Header />
+      <main className="flex-1">
+        <Hero />
+        <Features />
+        <Partners />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  )
 }
