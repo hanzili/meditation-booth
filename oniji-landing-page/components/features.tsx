@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-export default function Features() {
+export default function Features(): JSX.Element {
   const features = [
     {
       title: "Brainwave Detection",
@@ -21,7 +21,7 @@ export default function Features() {
       <div className="container px-4 md:px-6 mx-auto">
         <div className="text-center mb-12">
           <div className="inline-block rounded-lg bg-background px-3 py-1 text-sm text-primary mb-4">Key Features</div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl mb-4">Unlock Your Mind's Potential</h2>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl mb-4">Unlock Your Mind&apos;s Potential</h2>
           <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
             Our futuristic meditation booth uses cutting-edge technology to guide you through a personalized
             meditation session, helping you recharge.
@@ -30,11 +30,11 @@ export default function Features() {
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <Image
-            src="/booth.webp"
+            src="/booth.png"
             alt="Oniji Features"
             width={450}
             height={450}
-            className="w-full max-w-[450px] mx-auto rounded-xl object-cover object-center md:order-last"
+            className="w-full max-w-[260px] mx-auto rounded-xl object-cover object-center md:order-last"
           />
           <div className="space-y-8">
             {features.map((feature, index) => (
