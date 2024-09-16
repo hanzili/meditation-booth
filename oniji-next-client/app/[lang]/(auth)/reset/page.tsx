@@ -42,6 +42,7 @@ export default function Reset() {
     }
 
     try {
+      // TODO: security problem: password is sent in plain text; should not be done like this
       const { data } = await updatePassword({
         variables: {
           input: {

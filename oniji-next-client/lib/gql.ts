@@ -187,3 +187,18 @@ export const UPDATE_SESSION = gql`
     }
   }
 `;
+
+export const UPDATE_USER = gql`
+  mutation ONIJI_UpdateUser($input: OnijiUpdateUserInput!) {
+    ONIJI_UpdateUser(input: $input) {
+      error_code
+      error_message
+      user {
+        id
+        email
+        first_name
+        last_name
+      }
+    }
+  }
+`;
