@@ -1,25 +1,31 @@
-const { Neurosity } = require('@neurosity/sdk');
-const { deviceId, email, password } = require('./config');
+import { Neurosity } from "@neurosity/sdk";
+import config from "./config.js";
 
-let neurosity = null;
+let neurosity;
 
-exports.initNeurosity = async () => {
-  if (!neurosity) {
-    neurosity = new Neurosity({ deviceId });
-    try {
-      await neurosity.login({ email, password });
-      console.log('Logged in to Neurosity');
-    } catch (error) {
-      console.error('Failed to log in to Neurosity:', error);
-      throw error;
-    }
+const initNeurosity = async () => {
+  neurosity = new Neurosity({ deviceId: config.deviceId });
+  try {
+    await neurosity.login({ email: config.email, password: config.password });
+    console.log("Logged in to Neurosity");
+    const info = await neurosity.getInfo();
+    console.log(info);
+
+    neurosity.status().subscribe((status) => {
+      console.log(status);
+    });
+  } catch (error) {
+    console.error("Failed to log in to Neurosity:", error);
+    throw error;
   }
   return neurosity;
 };
 
-exports.getNeurosity = () => {
-  if (!neurosity) {
-    throw new Error('Neurosity not initialized. Call initNeurosity first.');
+const disconnectNeurosity = async () => {
+  if (neurosity) {
+    neurosity.disconnect();
+    console.log("Disconnected from Neurosity");
   }
-  return neurosity;
 };
+
+export { initNeurosity, disconnectNeurosity };

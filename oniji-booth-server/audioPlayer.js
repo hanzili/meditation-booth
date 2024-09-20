@@ -1,6 +1,6 @@
-const path = require('path');
-const fs = require('fs').promises;
-const { musicDir } = require('./config');
+import path from 'path';
+import { promises as fsPromises } from 'fs';
+import config from './config.js';
 
 const isMac = process.platform === 'darwin';
 
@@ -8,9 +8,10 @@ let player;
 let currentPlayer = null;
 
 if (isMac) {
-  player = require('play-sound')(opts = {});
+  const playSound = (await import('play-sound')).default;
+  player = playSound({});
 } else {
-  const APlay = require('node-aplay');
+  const APlay = (await import('node-aplay')).default;
   player = {
     play: (filepath, callback) => {
       const aplay = new APlay(filepath);
@@ -21,33 +22,23 @@ if (isMac) {
   };
 }
 
-exports.playMusic = async (musicName) => {
+const playMusic = async (musicFile) => {
+  const filePath = path.join(config.musicDir, musicFile);
+  
   try {
-    const musicPath = path.join(musicDir, musicName);
-    
-    // Check if the file exists
-    await fs.access(musicPath);
-    
-    if (currentPlayer) {
-      if (isMac) {
-        currentPlayer.kill();
-      } else {
-        currentPlayer.stop();
-      }
-    }
-
-    currentPlayer = player.play(musicPath, (err) => {
-      if (err) console.error('Error playing audio:', err);
+    await fsPromises.access(filePath);
+    console.log(`Playing music: ${musicFile}`);
+    currentPlayer = player.play(filePath, (err) => {
+      if (err) console.error(`Error playing ${musicFile}:`, err);
+      console.log(`Finished playing: ${musicFile}`);
     });
-
-    console.log(`Playing music: ${musicName}`);
   } catch (error) {
-    console.error('Error playing music:', error);
-    throw new Error(`Music file not found: ${musicName}`);
+    console.error(`Error accessing music file ${musicFile}:`, error);
+    throw error;
   }
 };
 
-exports.stopMusic = () => {
+const stopMusic = () => {
   if (currentPlayer) {
     if (isMac) {
       currentPlayer.kill();
@@ -58,3 +49,5 @@ exports.stopMusic = () => {
     console.log('Music stopped');
   }
 };
+
+export { playMusic, stopMusic };

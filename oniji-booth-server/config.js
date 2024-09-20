@@ -1,4 +1,6 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const config = {
   deviceId: process.env.DEVICE_ID,
@@ -7,11 +9,13 @@ const config = {
   dataDir: process.env.DATA_DIR || './data',
   musicDir: process.env.MUSIC_DIR || './music',
   port: process.env.PORT || 3001,
-  bufferSize: 100
+  bufferSize: 100,
+  neurosityPlugHost: process.env.NEUROSITY_PLUG_HOST || '192.168.2.72',
+  scentPlugHost: process.env.SCENT_PLUG_HOST
 };
 
 const verifyConfig = () => {
-  const requiredFields = ['deviceId', 'email', 'password', 'dataDir'];
+  const requiredFields = ['deviceId', 'email', 'password', 'neurosityPlugHost'];
   for (const field of requiredFields) {
     if (!config[field]) {
       throw new Error(`Missing required configuration: ${field}`);
@@ -21,4 +25,4 @@ const verifyConfig = () => {
 
 verifyConfig();
 
-module.exports = config;
+export default config;

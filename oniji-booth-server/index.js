@@ -1,16 +1,14 @@
-const express = require('express');
-const { initNeurosity } = require('./neurosity');
-const { port } = require('./config');
-const routes = require('./routes');
+import express from 'express';
+import config from './config.js';
+import routes from './routes.js';
 
 const app = express();
 
 async function main() {
   try {
-    await initNeurosity();
     app.use('/', routes);
-    app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
+    app.listen(config.port, () => {
+      console.log(`Server running on http://localhost:${config.port}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

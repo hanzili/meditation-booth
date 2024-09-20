@@ -1,16 +1,11 @@
-const express = require('express');
-const { 
-  startSessionWithMusic, 
-  stopSessionAndMusic, 
-  listSessionFiles, 
-  downloadSessionFile 
-} = require('./dataHandler');
+import express from 'express';
+import { startSessionWithMusic, endSessionAndMusic, listSessionFiles, downloadSessionFile } from './dataHandler.js';
 
 const router = express.Router();
 
 router.get('/start-session/:sessionId/:musicName', startSessionWithMusic);
-router.get('/stop-session/:sessionId', stopSessionAndMusic);
+router.get('/end-session/:sessionId', endSessionAndMusic);
 router.get('/list-session-files/:sessionId', listSessionFiles);
 router.get('/download-session-file/:filename', downloadSessionFile);
 
-module.exports = router;
+export default router;
