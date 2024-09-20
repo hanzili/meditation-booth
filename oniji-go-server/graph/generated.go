@@ -5110,7 +5110,7 @@ func (ec *executionContext) unmarshalInputOnijiUpdateSessionInput(ctx context.Co
 			it.ID = data
 		case "survey":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("survey"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5128,7 +5128,7 @@ func (ec *executionContext) unmarshalInputOnijiUpdateUserInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"first_name", "last_name", "language", "password"}
+	fieldsInOrder := [...]string{"first_name", "last_name", "language", "password", "survey"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5163,6 +5163,13 @@ func (ec *executionContext) unmarshalInputOnijiUpdateUserInput(ctx context.Conte
 				return it, err
 			}
 			it.Password = data
+		case "survey":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("survey"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Survey = data
 		}
 	}
 

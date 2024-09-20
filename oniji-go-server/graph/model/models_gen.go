@@ -75,8 +75,8 @@ type OnijiSignupByEmailInput struct {
 }
 
 type OnijiUpdateSessionInput struct {
-	ID     string `json:"id"`
-	Survey string `json:"survey"`
+	ID     string  `json:"id"`
+	Survey *string `json:"survey,omitempty"`
 }
 
 type OnijiUpdateUserInput struct {
@@ -84,6 +84,7 @@ type OnijiUpdateUserInput struct {
 	LastName  *string   `json:"last_name,omitempty"`
 	Language  *Language `json:"language,omitempty"`
 	Password  *string   `json:"password,omitempty"`
+	Survey    *string   `json:"survey,omitempty"`
 }
 
 type OnijiUserReponse struct {

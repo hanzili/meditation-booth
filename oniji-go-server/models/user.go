@@ -26,4 +26,5 @@ type User struct {
 	CreatedAt     time.Time  `json:"created_at,omitempty" bun:"created_at,default:current_timestamp"`
 	UpdatedAt     time.Time  `json:"updated_at,omitempty" bun:"updated_at,default:current_timestamp"`
 	DeletedAt     *time.Time `json:"deleted_at,omitempty" bun:"deleted_at,soft_delete"`
+	Survey        *string    `json:"survey,omitempty" bun:"survey"`
 }

@@ -194,6 +194,9 @@ func (r *mutationResolver) OnijiUpdateUser(ctx context.Context, input model.Onij
 	if input.Password != nil {
 		user.Password = *input.Password
 	}
+	if input.Survey != nil {
+		user.Survey = input.Survey
+	}
 
 	err = repositories.UserRepo.Update(user)
 	if err != nil {

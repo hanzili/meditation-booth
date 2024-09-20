@@ -60,7 +60,7 @@ input OnijiEndSessionInput {
 
 input OnijiUpdateSessionInput {
   id: String!
-  survey: String!
+  survey: String
 }
 
 input OnijiGetSessionInput {
