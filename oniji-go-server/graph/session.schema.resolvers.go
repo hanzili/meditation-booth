@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -114,6 +115,33 @@ func (r *mutationResolver) OnijiEndSession(ctx context.Context, input model.Onij
 			"response":  resp,
 		}).Error("failed to end session on booth server")
 		return nil, fmt.Errorf("failed to end session on booth server, status code: %d", resp.StatusCode)
+	}
+
+	var responseData map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&responseData); err != nil {
+		log.WithFields(log.Fields{
+			"sessionId": sessionId,
+			"error":     err.Error(),
+		}).Error("failed to decode response from booth server")
+		return nil, err
+	}
+
+	if calmData, ok := responseData["calmData"].([]interface{}); ok {
+		// Convert []interface{} to []float64
+		calmDataFloat := make([]float64, len(calmData))
+		for i, v := range calmData {
+			if f, ok := v.(float64); ok {
+				calmDataFloat[i] = f
+			}
+		}
+
+		// Convert []float64 to string
+		calmDataString := fmt.Sprintf("%v", calmDataFloat)
+		session.Calm = &calmDataString
+	} else {
+		log.WithFields(log.Fields{
+			"sessionId": sessionId,
+		}).Warn("calmData not found in booth server response or not a slice")
 	}
 
 	timeNow := time.Now()

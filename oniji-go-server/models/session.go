@@ -21,6 +21,7 @@ type Session struct {
 	UpdatedAt     time.Time   `json:"updated_at,omitempty" bun:"updated_at,default:current_timestamp"`
 	DeletedAt     *time.Time  `json:"deleted_at,omitempty" bun:"deleted_at,soft_delete"`
 	Survey        *string     `json:"survey,omitempty" bun:"survey"`
+	Calm          *string     `json:"calm,omitempty" bun:"calm"`
 }
 
 type Music struct {

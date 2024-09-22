@@ -24,6 +24,8 @@ type Session {
   music: Music!
   "survey"
   survey: String
+  "calm"
+  calm: String
 }
 
 type OnijiSessionReponse {

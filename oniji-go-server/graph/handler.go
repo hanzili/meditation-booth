@@ -1,6 +1,8 @@
 package graph
 
 import (
+	"fmt"
+
 	"github.com/hanzili/oniji-go-server/graph/model"
 	"github.com/hanzili/oniji-go-server/models"
 )
@@ -38,6 +40,7 @@ func convertToGqlSession(session *models.Session) *model.Session {
 			Name:     &session.Music.Name,
 			Duration: &session.Music.Duration,
 		},
+		Calm: session.Calm,
 	}
 	if session.StartTime != nil {
 		startTime := session.StartTime.String()
@@ -48,6 +51,7 @@ func convertToGqlSession(session *models.Session) *model.Session {
 		gqlSession.EndTime = &endTime
 	}
 
+	fmt.Printf("gqlSession: %+v\n", gqlSession)
 	return gqlSession
 }
 

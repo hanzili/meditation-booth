@@ -92,6 +92,7 @@ type ComplexityRoot struct {
 	}
 
 	Session struct {
+		Calm        func(childComplexity int) int
 		EndTime     func(childComplexity int) int
 		HasScent    func(childComplexity int) int
 		ID          func(childComplexity int) int
@@ -370,6 +371,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.OnijiUser(childComplexity), true
+
+	case "Session.calm":
+		if e.complexity.Session.Calm == nil {
+			break
+		}
+
+		return e.complexity.Session.Calm(childComplexity), true
 
 	case "Session.end_time":
 		if e.complexity.Session.EndTime == nil {
@@ -1654,6 +1662,8 @@ func (ec *executionContext) fieldContext_OnijiSessionReponse_session(ctx context
 				return ec.fieldContext_Session_music(ctx, field)
 			case "survey":
 				return ec.fieldContext_Session_survey(ctx, field)
+			case "calm":
+				return ec.fieldContext_Session_calm(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Session", field.Name)
 		},
@@ -1797,6 +1807,8 @@ func (ec *executionContext) fieldContext_OnijiSessionsResponse_sessions(ctx cont
 				return ec.fieldContext_Session_music(ctx, field)
 			case "survey":
 				return ec.fieldContext_Session_survey(ctx, field)
+			case "calm":
+				return ec.fieldContext_Session_calm(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Session", field.Name)
 		},
@@ -2758,6 +2770,47 @@ func (ec *executionContext) _Session_survey(ctx context.Context, field graphql.C
 }
 
 func (ec *executionContext) fieldContext_Session_survey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Session",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Session_calm(ctx context.Context, field graphql.CollectedField, obj *model.Session) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Session_calm(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Calm, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Session_calm(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Session",
 		Field:      field,
@@ -5598,6 +5651,8 @@ func (ec *executionContext) _Session(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "survey":
 			out.Values[i] = ec._Session_survey(ctx, field, obj)
+		case "calm":
+			out.Values[i] = ec._Session_calm(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

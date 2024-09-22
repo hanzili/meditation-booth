@@ -118,6 +118,8 @@ type Session struct {
 	Music *Music `json:"music"`
 	// survey
 	Survey *string `json:"survey,omitempty"`
+	// calm
+	Calm *string `json:"calm,omitempty"`
 }
 
 type User struct {
