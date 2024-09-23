@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 
@@ -17,20 +18,20 @@ type Config struct {
 	AppName        string          `validate:"required"`
 	Environment    string          `validate:"required"`
 	PostgresConfig *PostgresConfig `validate:"required"`
-	RedisConfig    *RedisConfig
+	// RedisConfig    *RedisConfig
 	SupabaseConfig *SupabaseConfig
 	BoothUrl       string `validate:"required"`
 }
 
 func NewConfig() *Config {
 	postgresConfig := loadPostgresConfig()
-	redisConfig := loadRedisConfig()
+	// redisConfig := loadRedisConfig()
 	supabaseConfig := loadSupabaseConfig()
 	config := &Config{
 		AppName:        strings.Trim(viper.GetString("APP_NAME"), " "),
 		Environment:    strings.Trim(viper.GetString("ENVIRONMENT"), " "),
 		PostgresConfig: postgresConfig,
-		RedisConfig:    redisConfig,
+		// RedisConfig:    redisConfig,
 		SupabaseConfig: supabaseConfig,
 		BoothUrl:       strings.Trim(viper.GetString("BOOTH_URL"), " "),
 	}
@@ -46,7 +47,13 @@ func GetConfig() *Config {
 }
 
 func init() {
-	viper.SetConfigName("config.yml")
+	environment := os.Getenv("ENVIRONMENT")
+	if environment == "" {
+		environment = "local"
+	}
+	fmt.Println("environment:", environment)
+
+	viper.SetConfigName(fmt.Sprintf("config.%s.yml", environment))
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(".")
 

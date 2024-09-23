@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/stdlib"
@@ -46,9 +47,15 @@ func GetClient() *bun.DB {
 }
 
 func init() {
-	err := GetClient().Ping()
-	if err != nil {
-		panic(err)
+	maxRetries := 5
+	for i := 0; i < maxRetries; i++ {
+		err := GetClient().Ping()
+		if err == nil {
+			log.Info("database connection established")
+			return
+		}
+		log.Warnf("Failed to connect to database (attempt %d/%d): %v", i+1, maxRetries, err)
+		time.Sleep(5 * time.Second)
 	}
-	log.Info("database connection established")
+	log.Fatal("Failed to connect to database after multiple attempts")
 }
