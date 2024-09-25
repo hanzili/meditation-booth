@@ -246,7 +246,7 @@ export default function CreateSessionPage({ params }: { params: { lang: string }
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col justify-center items-center">
-                  <Button className="mb-3 w-full" variant="outline" onClick={() => handleSessionLengthChoice(false)}>
+                  <Button className="mb-3 w-full" onClick={() => handleSessionLengthChoice(false)}>
                     Keep it Short (5-10 minutes)
                   </Button>
                   <Button className="w-full" onClick={() => handleSessionLengthChoice(true)}>

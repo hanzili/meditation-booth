@@ -30,6 +30,14 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     }
   }, [router]);
 
+  // Handle session end
+  const handleSessionEnd = async () => {
+    await endSession({
+      variables: { input: { id: params.id } },
+    });
+    router.push("/");
+  };
+
   // Set up countdown timer
   useEffect(() => {
     if (data?.ONIJI_GetSession?.session) {
@@ -55,15 +63,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
 
       return () => clearInterval(interval);
     }
-  }, [data]);
-
-  // Handle session end
-  const handleSessionEnd = async () => {
-    await endSession({
-      variables: { input: { id: params.id } },
-    });
-    router.push("/");
-  };
+  }, [data, handleSessionEnd]);
 
   // Handle manual end button click
   const handleEndClick = async () => {
