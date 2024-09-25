@@ -119,6 +119,7 @@ export const GET_SESSIONS = gql`
         }
         start_time
         end_time
+        calm
       }
     }
   }
@@ -157,6 +158,7 @@ export const GET_SESSION = gql`
         }
         start_time
         end_time
+        calm
       }
     }
   }

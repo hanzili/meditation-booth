@@ -32,7 +32,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         email: data.ONIJI_User.user.email,
       });
     } else if (error) {
-      console.error('Failed to fetch user info:', error);
       setUser(null);
     }
   }, [data, error]);

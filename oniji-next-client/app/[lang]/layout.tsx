@@ -9,6 +9,7 @@ import { DictionaryProvider } from "@/components/wrappers/dictionary-wrapper";
 import LanguageSwitcher from "@/components/language-toggle";
 import { UserProfile } from "@/components/user-profile";
 import { UserProvider } from "@/components/wrappers/user-provider";
+import { UserSetting } from "@/components/user-setting";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +44,7 @@ export default async function RootLayout({
                     <ModeToggle />
                     <div className="flex items-center space-x-2">
                       <LanguageSwitcher locale={params.lang} />
-                      <UserProfile />
+                      <UserSetting />
                     </div>
                   </div>
                   <main className="flex-grow flex items-center justify-center">

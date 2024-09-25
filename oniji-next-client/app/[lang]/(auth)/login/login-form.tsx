@@ -77,7 +77,7 @@ export default function LoginForm({
   return (
     <>
       <Notification />
-      <Card className="mx-auto max-w-sm">
+      <Card className="max-w-sm mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl">{dict.LoginPage.Login}</CardTitle>
           <CardDescription>

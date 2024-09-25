@@ -1,5 +1,6 @@
 import { useRouter, useParams } from "next/navigation";
 
+// this router is used to redirect to the correct language version of the page
 export function useLocalizedRouter() {
   const router = useRouter();
   const params = useParams();

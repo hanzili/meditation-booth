@@ -87,7 +87,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">{dict.SignupPage.Title}</CardTitle>

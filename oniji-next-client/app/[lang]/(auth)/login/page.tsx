@@ -12,7 +12,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center">
       {resetPassword ? (
         <ResetPasswordForm onToggleReset={toggleResetPassword} />
       ) : (
