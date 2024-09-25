@@ -117,9 +117,8 @@ export function UserProfile() {
             <DialogTitle>User History</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            View your activity history here.
+            View your activity history and calm level here.
           </DialogDescription>
-          {/* Add history content here */}
         </DialogContent>
       </Dialog>
     </>

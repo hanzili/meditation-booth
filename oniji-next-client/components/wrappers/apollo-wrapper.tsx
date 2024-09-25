@@ -13,7 +13,7 @@ import { REFRESH_TOKEN } from "@/lib/gql";
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "http://localhost:8080/query",
+    uri: process.env.NEXT_PUBLIC_SERVER_URL,
     fetchOptions: { cache: "no-store" },
   });
 

@@ -7,14 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { formatDistanceToNow } from "date-fns";
-import { ReportChart } from "@/components/report-chart";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
 import { GET_SESSIONS } from "@/lib/gql";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SessionInfo } from "./session-info";
 
 interface HistoryDialogProps {
   isOpen: boolean;
@@ -27,7 +24,10 @@ export function HistoryDialog({ isOpen, onOpenChange }: HistoryDialogProps) {
     error: sessionsError,
     data: sessionsData,
     refetch,
-  } = useQuery(GET_SESSIONS);
+  } = useQuery(GET_SESSIONS, {
+    skip: !isOpen,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -51,30 +51,11 @@ export function HistoryDialog({ isOpen, onOpenChange }: HistoryDialogProps) {
         <DialogHeader>
           <DialogTitle>Session History</DialogTitle>
         </DialogHeader>
-        <DialogDescription>View your activity history here.</DialogDescription>
-        <ScrollArea className="flex-grow pr-4">
-          <div className="space-y-4">
-            {sessions.map((session: any) => (
-              <div
-                key={session.id}
-                className="text-foreground border-b border-gray-700 pb-4 mb-4 last:border-b-0 last:mb-0 last:pb-0"
-              >
-                <p className="font-semibold text-lg">{session.music.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDistanceToNow(new Date(session.start_time), {
-                    addSuffix: true,
-                  })}
-                </p>
-                <div className="my-2 space-y-1">
-                  <p className="text-sm">Mood: {session.mood}</p>
-                  <p className="text-sm">Session type: {session.session_type}</p>
-                </div>
-                {session.calm && (
-                  <ReportChart points={session.calm.split(" ").map(Number)} />
-                )}
-              </div>
-            ))}
-          </div>
+        <DialogDescription>your calm level over time for each session</DialogDescription>
+        <ScrollArea className="flex-grow">
+          {sessions.map((session: any) => (
+            <SessionInfo key={session.id} session={session} />
+          ))}
         </ScrollArea>
       </DialogContent>
     </Dialog>

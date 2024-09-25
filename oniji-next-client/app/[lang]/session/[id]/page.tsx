@@ -82,18 +82,22 @@ export default function SessionPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <Card className="p-8">
+    <div className="flex items-center justify-center w-full">
+      <Card className="w-full max-w-md p-8">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold mb-4">
+          <CardTitle className="text-2xl font-bold text-center">
             Enjoy your meditation
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-center">
-          <div className="text-8xl font-bold mb-4">
+        <CardContent className="flex flex-col items-center">
+          <div className="text-8xl font-bold mb-8">
             {formatTime(countdownTime)}
           </div>
-          <Button onClick={handleEndClick} disabled={endSessionLoading}>
+          <Button 
+            onClick={handleEndClick} 
+            disabled={endSessionLoading} 
+            className="w-full max-w-xs"
+          >
             End
           </Button>
           {endSessionError && (

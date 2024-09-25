@@ -8,14 +8,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useUser } from "@/components/wrappers/user-provider"
 import { User } from "lucide-react"
 import { ProfileDialog } from "./profile-dialog"
 import { HistoryDialog } from "./history-dialog"
+import { useUser } from "@/components/wrappers/user-provider"
 
 export function UserSetting() {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const { user } = useUser()
+
+  if (!user) return null
 
   return (
     <>
@@ -26,9 +29,9 @@ export function UserSetting() {
             <span className="sr-only">User Menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onSelect={() => setIsProfileOpen(true)}>Profile</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsHistoryOpen(true)}>History</DropdownMenuItem>
+        <DropdownMenuContent className="min-w-[30px] mr-3">
+          <DropdownMenuItem className="justify-end" onSelect={() => setIsProfileOpen(true)}>Profile</DropdownMenuItem>
+          <DropdownMenuItem className="justify-end" onSelect={() => setIsHistoryOpen(true)}>History</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
