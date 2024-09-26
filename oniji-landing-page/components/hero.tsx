@@ -64,7 +64,7 @@ export default function Hero() {
                   <DialogHeader>
                     <DialogTitle>Are you in the meditation booth now?</DialogTitle>
                     <DialogDescription>
-                      If you're in the booth, click "Yes" to start your in-booth session. Else, click "No" to start a virtual session.
+                      If you&apos;re in the booth, click &quot;Yes&quot; to start your in-booth session. Else, click &quot;No&quot; to start a virtual session.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex justify-end space-x-2">

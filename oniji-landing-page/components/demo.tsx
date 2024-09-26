@@ -46,7 +46,7 @@ export default function Demo() {
       audioRef.current.pause();
       audioRef.current.src = "";
     }
-  }, [selectedMood]);
+  }, [selectedMood, moods]);
 
   return (
     <section id="demo" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex flex-col items-center justify-center">
