@@ -39,7 +39,7 @@ export default async function RootLayout({
           <ApolloWrapper>
             <DictionaryProvider dict={dict}>
               <UserProvider>
-                <div className="min-h-screen flex flex-col px-4 py-6 bg-background">
+                <div className="min-h-screen flex flex-col px-4 py-6 bg-background text-foreground">
                   <div className="flex items-center justify-between mb-6">
                     <ModeToggle />
                     <div className="flex items-center space-x-2">

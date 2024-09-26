@@ -32,13 +32,12 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 const FormSchema = z.object({
   mood: z.string().min(1, "Please select your mood."),
   session_type: z.string().min(1, "Please select a session type."),
-  has_scent: z.boolean().refine((val) => val === true || val === false, {
-    message: "Please select your scent preference.",
-  }),
+  has_scent: z.boolean(),
   // Remove is_long from the schema
 });
 
@@ -191,9 +190,9 @@ export default function CreateSessionPage({ params }: { params: { lang: string }
               control={form.control}
               name="has_scent"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-row items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <FormLabel>Scent Preference</FormLabel>
+                    <FormLabel className="text-sm font-medium">Scent Preference</FormLabel>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -202,36 +201,18 @@ export default function CreateSessionPage({ params }: { params: { lang: string }
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Indicate if you&apos;d like to incorporate aromatherapy into your meditation session.</p>
+                          <p>Incorporate aromatherapy into your meditation session</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
                   <FormControl>
-                    <div className="flex items-center">
-                      <Label className="flex items-center mr-8">
-                        <Input
-                          type="radio"
-                          value="true"
-                          checked={field.value === true}
-                          onChange={() => field.onChange(true)}
-                          className="w-fit mr-2"
-                        />
-                        True
-                      </Label>
-                      <Label className="flex items-center">
-                        <Input
-                          type="radio"
-                          value="false"
-                          checked={field.value === false}
-                          onChange={() => field.onChange(false)}
-                          className="w-fit mr-2"
-                        />
-                        False
-                      </Label>
-                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="scale-75"
+                    />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

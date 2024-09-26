@@ -45,7 +45,7 @@ export function ProfileDialog({ isOpen, onOpenChange }: ProfileDialogProps) {
         <DialogDescription>
           Edit your profile information
         </DialogDescription>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 text-foreground">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="firstName" className="text-right">
               First Name

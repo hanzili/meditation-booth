@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocalizedRouter } from "@/hooks/use-localized";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { END_SESSION, GET_SESSION } from "@/lib/gql";
 export default function SessionPage({ params }: { params: { id: string } }) {
   const router = useLocalizedRouter();
   const [countdownTime, setCountdownTime] = useState(0);
+  const handleSessionEndRef = useRef<() => Promise<void>>();
 
   // GraphQL queries and mutations
   const [endSession, { loading: endSessionLoading, error: endSessionError }] =
@@ -22,21 +23,17 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     variables: { input: { id: params.id } },
   });
 
-  // Check for authentication
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (!storedToken) {
-      router.push("/login");
-    }
-  }, [router]);
-
   // Handle session end
-  const handleSessionEnd = async () => {
-    await endSession({
-      variables: { input: { id: params.id } },
-    });
-    router.push("/");
-  };
+  handleSessionEndRef.current = useCallback(async () => {
+    try {
+      await endSession({
+        variables: { input: { id: params.id } },
+      });
+      router.push(`/session/${params.id}/summary`);
+    } catch (error) {
+      console.error("Failed to end session:", error);
+    }
+  }, [endSession, params.id, router]);
 
   // Set up countdown timer
   useEffect(() => {
@@ -54,7 +51,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
         setCountdownTime((prevTime) => {
           if (prevTime <= 0) {
             clearInterval(interval);
-            handleSessionEnd();
+            handleSessionEndRef.current?.();
             return 0;
           }
           return prevTime - 1;
@@ -63,12 +60,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
 
       return () => clearInterval(interval);
     }
-  }, [data, handleSessionEnd]);
-
-  // Handle manual end button click
-  const handleEndClick = async () => {
-    await handleSessionEnd();
-  };
+  }, [data]);
 
   // Render loading and error states
   if (getSessionLoading) return <div>Loading...</div>;
@@ -94,7 +86,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
             {formatTime(countdownTime)}
           </div>
           <Button 
-            onClick={handleEndClick} 
+            onClick={() => handleSessionEndRef.current?.()} 
             disabled={endSessionLoading} 
             className="w-full max-w-xs"
           >
