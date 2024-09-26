@@ -9,7 +9,7 @@ export default function Header() {
         <span className="sr-only">Oniji</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
-        {['Features', 'Partners', 'Contact'].map((item) => (
+        {['Features', 'Partners', 'Demo', 'Contact'].map((item) => (
           <Link key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium hover:underline underline-offset-4">
             {item}
           </Link>

@@ -4,6 +4,7 @@ import Features from '@/components/features'
 import Partners from '@/components/partners'
 import Contact from '@/components/contact'
 import Footer from '@/components/footer'
+import Demo from '@/components/demo'
 
 export default function LandingPage(): JSX.Element {
   return (
@@ -13,6 +14,7 @@ export default function LandingPage(): JSX.Element {
         <Hero />
         <Features />
         <Partners />
+        <Demo />
         <Contact />
       </main>
       <Footer />
