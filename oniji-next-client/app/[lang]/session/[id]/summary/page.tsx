@@ -66,7 +66,7 @@ export default function SessionSummaryPage({ params }: { params: { id: string, l
           <DialogHeader>
             <DialogTitle>Thank you for using our app!</DialogTitle>
             <DialogDescription>
-              If you found it helpful, we'd appreciate your support. Consider donating to help us improve.
+              If you found it helpful, we&apos;d appreciate your support. Consider donating to help us improve.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
