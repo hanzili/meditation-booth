@@ -11,9 +11,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils" // Make sure you have this utility function
+import { cn } from "@/lib/utils"
 
-export default function Hero() {
+const hero:any = {
+  en: {
+    title: "Recharge Your Mind with Oniji",
+    description: "Step into Open Booth® for a one-of-a-kind relaxation experience. Recharge, and unwind in a space designed to bring mindfulness into the fast-paced modern world.",
+    bookNowButton: "Book Now",
+    meditateNowButton: "Meditate Now",
+    dialogTitle: "Are you in the meditation booth now?",
+    dialogDescription: "If you're in the booth, click &quot;Yes&quot; to start your in-booth session. Else, click &quot;No&quot; to start a virtual session.",
+    dialogNoButton: "No",
+    dialogYesButton: "Yes"
+  },
+  fr: {
+    title: "Rechargez votre esprit avec Oniji",
+    description: "Entrez dans Open Booth® pour une expérience de relaxation hors du commun. Rechargez-vous et détends-vous dans un espace conçu pour apporter la méditation à la vie moderne rapide.",
+    bookNowButton: "Réserver maintenant",
+    meditateNowButton: "Méditer maintenant",
+    dialogTitle: "Êtes-vous dans le boîtier de méditation maintenant ?",
+    dialogDescription: "Si vous êtes dans le boîtier, cliquez sur &quot;Oui&quot; pour commencer votre session dans le boîtier. Sinon, cliquez sur &quot;Non&quot; pour commencer une session virtuelle.",
+    dialogNoButton: "Non",
+    dialogYesButton: "Oui"
+  }
+}
+
+
+export default function Hero({ params }: { params: { lang: string } }) {
   const [open, setOpen] = useState(false)
 
   const handleMeditateNow = () => {
@@ -39,10 +63,10 @@ export default function Hero() {
         <div className="grid gap-6 lg:grid-cols-[1fr_550px] lg:gap-12 xl:grid-cols-[1fr_650px]">
           <div className="flex flex-col justify-center space-y-4 text-foreground">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-foreground mb-5 ">
-              Recharge Your Mind with Oniji
+              {hero[params.lang].title}
             </h1>
             <p className="max-w-[600px] text-foreground/80 md:text-xl mb-5">
-              Step into Open Booth® for a one-of-a-kind relaxation experience. Recharge, and unwind in a space designed to bring mindfulness into the fast-paced modern world.
+              {hero[params.lang].description}
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link
@@ -51,25 +75,25 @@ export default function Hero() {
                 rel="noopener noreferrer"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
               >
-                Book Now
+                {hero[params.lang].bookNowButton}
               </Link>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline">Meditate Now</Button>
+                  <Button variant="outline">{hero[params.lang].meditateNowButton}</Button>
                 </DialogTrigger>
                 <DialogContent className={cn(
                   "sm:max-w-[425px]",
                   "max-w-[calc(100%-2rem)] mx-auto"
                 )}>
                   <DialogHeader>
-                    <DialogTitle>Are you in the meditation booth now?</DialogTitle>
+                    <DialogTitle>{hero[params.lang].dialogTitle}</DialogTitle>
                     <DialogDescription>
-                      If you&apos;re in the booth, click &quot;Yes&quot; to start your in-booth session. Else, click &quot;No&quot; to start a virtual session.
+                      {hero[params.lang].dialogDescription}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex justify-end space-x-2">
-                    <Button variant="secondary" onClick={handleNoClick}>No</Button>
-                    <Button onClick={handleMeditateNow}>Yes</Button>
+                    <Button variant="secondary" onClick={handleNoClick}>{hero[params.lang].dialogNoButton}</Button>
+                    <Button onClick={handleMeditateNow}>{hero[params.lang].dialogYesButton}</Button>
                   </div>
                 </DialogContent>
               </Dialog>

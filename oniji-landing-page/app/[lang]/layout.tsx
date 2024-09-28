@@ -9,14 +9,20 @@ export const metadata: Metadata = {
   description: "Have a wonderful meditation session",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang: string };
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className}`}>{children}</body>
+    <html lang={params.lang}>
+        <body className={`${inter.className}`}>{children}</body>
     </html>
   );
+}
+
+export async function generateStaticParams() {
+  return [{ lang: 'en' }, { lang: 'fr' }]
 }
