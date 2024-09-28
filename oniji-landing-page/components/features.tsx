@@ -3,7 +3,7 @@ import Image from 'next/image'
 const features:any = {
   en:{
     subTitle: "Key Features",
-    title: "Unlock Your Mind&apos;s Potential",
+    title: "Unlock Your Mind's Potential",
     description: "Our futuristic meditation booth uses cutting-edge technology to guide you through a personalized meditation session, helping you recharge.",
     features: [
       {
@@ -42,6 +42,9 @@ const features:any = {
 }
 
 export default function Features({ params }: { params: { lang: string } }): JSX.Element {
+  if (!features[params.lang]) {
+    return <></>
+  }
   return (
     <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
       <div className="container px-4 md:px-6 mx-auto">
@@ -55,7 +58,7 @@ export default function Features({ params }: { params: { lang: string } }): JSX.
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <Image
-            src="/booth.png"
+            src="/images/booth.png"
             alt="Oniji Features"
             width={450}
             height={450}

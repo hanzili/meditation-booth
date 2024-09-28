@@ -48,6 +48,9 @@ const partners: { [key: string]: any } = {
 }
 
 export default function Partners({ params }: { params: { lang: string } }) {
+  if (!partners[params.lang]) {
+    return <></>
+  }
   return (
     <section id="partners" className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6 mx-auto">

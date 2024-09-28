@@ -8,7 +8,13 @@ function getLocale(request: NextRequest) {
     const acceptLanguage = headers.get('accept-language')
     
     if (acceptLanguage) {
-        return acceptLanguage.split(',')[0]
+        acceptLanguage.split(',').forEach(language => {
+            locales.forEach(locale => {
+                if (language.includes(locale)) {
+                    return locale
+                }
+            })
+        })
     }
     return 'en'
 }

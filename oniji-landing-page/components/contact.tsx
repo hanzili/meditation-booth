@@ -17,6 +17,9 @@ const contact: any = {
 };
 
 export default function Contact({ params }: { params: { lang: string } }) {
+  if (!contact[params.lang]) {
+    return <></>
+  }
   return (
     <section
       id="contact"
