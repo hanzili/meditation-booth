@@ -91,7 +91,7 @@ export default function Hero({ params }: { params: { lang: string } }) {
                   <DialogHeader>
                     <DialogTitle>{hero[params.lang].dialogTitle}</DialogTitle>
                     <DialogDescription>
-                      {hero[params.lang].dialogDescription}
+                      <div dangerouslySetInnerHTML={{ __html: hero[params.lang].dialogDescription }} />
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex justify-end space-x-2">
