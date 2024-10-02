@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
 const hero:any = {
   en: {
     title: "Recharge Your Mind with Oniji",
-    description: "Step into Open Booth® for a one-of-a-kind relaxation experience. Recharge, and unwind in a space designed to bring mindfulness into the fast-paced modern world.",
+    description: "Step into Open Booth™ for a one-of-a-kind relaxation experience. Recharge, and unwind in a space designed to bring mindfulness into the fast-paced modern world.",
     bookNowButton: "Book Now",
     meditateNowButton: "Meditate Now",
     dialogTitle: "Are you in the meditation booth now?",
@@ -26,7 +26,7 @@ const hero:any = {
   },
   fr: {
     title: "Rechargez votre esprit avec Oniji",
-    description: "Entrez dans Open Booth® pour une expérience de relaxation hors du commun. Rechargez-vous et détends-vous dans un espace conçu pour apporter la méditation à la vie moderne rapide.",
+    description: "Entrez dans Open Booth™ pour une expérience de relaxation hors du commun. Rechargez-vous et détends-vous dans un espace conçu pour apporter la méditation à la vie moderne rapide.",
     bookNowButton: "Réserver maintenant",
     meditateNowButton: "Méditer maintenant",
     dialogTitle: "Êtes-vous dans le boîtier de méditation maintenant ?",
