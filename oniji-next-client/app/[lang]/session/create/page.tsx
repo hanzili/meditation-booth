@@ -37,8 +37,7 @@ import { Switch } from "@/components/ui/switch";
 const FormSchema = z.object({
   mood: z.string().min(1, "Please select your mood."),
   session_type: z.string().min(1, "Please select a session type."),
-  has_scent: z.boolean(),
-  // Remove is_long from the schema
+  has_scent: z.boolean().default(false),
 });
 
 type FormValues = z.infer<typeof FormSchema>;
@@ -63,6 +62,9 @@ export default function CreateSessionPage({ params }: { params: { lang: string }
 
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      has_scent: false,
+    },
   });
 
   async function onSubmit(data: FormValues) {

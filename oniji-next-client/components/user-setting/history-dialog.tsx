@@ -38,20 +38,21 @@ export function HistoryDialog({ isOpen, onOpenChange }: HistoryDialogProps) {
   const sessions = sessionsData?.ONIJI_GetSessions?.sessions || [];
 
   if (sessionsLoading) {
-    return <div>Loading sessions...</div>;
+    return <div></div>;
   }
 
   if (sessionsError) {
-    return <div>Error loading sessions: {sessionsError.message}</div>;
+    console.error(sessionsError);
+    return <div></div>;
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-5/6 max-w-4xl h-[90vh] flex flex-col rounded-lg">
+      <DialogContent className="w-5/6 max-w-4xl max-h-[90vh] flex flex-col rounded-lg">
         <DialogHeader>
           <DialogTitle>Session History</DialogTitle>
+          <DialogDescription>Your calm level over time for each session</DialogDescription>
         </DialogHeader>
-        <DialogDescription>your calm level over time for each session</DialogDescription>
         <ScrollArea className="flex-grow">
           {sessions.map((session: any) => (
             <SessionInfo key={session.id} session={session} />

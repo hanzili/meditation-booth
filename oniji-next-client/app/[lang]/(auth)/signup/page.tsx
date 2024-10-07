@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_BY_EMAIL } from "@/lib/gql";
 import { useDictionary } from "@/components/wrappers/dictionary-wrapper";
+import { DataPolicyAgreement } from "@/components/data-policy-agreement";
 
 export default function SignupPage() {
   const dict: any = useDictionary();
@@ -26,6 +27,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [cpassword, setcPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const router = useLocalizedRouter();
 
   const [signupByEmail, { loading, error }] = useMutation(SIGNUP_BY_EMAIL);
@@ -52,6 +54,11 @@ export default function SignupPage() {
 
     if (password!== cpassword) {
       setErrorMessage("Passwords entered are not identical")
+      return;
+    }
+
+    if (!agreedToPolicy) {
+      setErrorMessage("You must agree to the Data Policy to sign up.");
       return;
     }
 
@@ -150,19 +157,20 @@ export default function SignupPage() {
                 required
               />
             </div>
-            {errorMessage && (
-              <p className="text-red-500 text-sm">{errorMessage}</p>
-            )}
             <div onClick={() => setShowPassword(!showPassword)}>
               <p className="cursor-pointer hover:underline text-sm">
                 {showPassword ? dict.SignupPage.HidePassword : dict.SignupPage.ShowPassword}
               </p>
             </div>
+            <DataPolicyAgreement onAgreementChange={setAgreedToPolicy} />
+            {errorMessage && (
+              <p className="text-red-500 text-sm">{errorMessage}</p>
+            )}
             <Button
               type="submit"
               className="w-full"
               onClick={handleSignup}
-              disabled={loading}
+              disabled={loading || !agreedToPolicy}
             >
               {loading ? dict.SignupPage.SigningUp : dict.SignupPage.SignUp}
             </Button>
