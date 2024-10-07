@@ -1,29 +1,23 @@
 // index.js
-import express from 'express';
-import config from './config.js';
-import routes from './routes.js';
-import { disconnectNeurosity } from './neurosity.js';
-import { togglePlugOn } from './plug.js';
+import app from './app.js';
+import config from './config/index.js';
+import { disconnectNeurosity } from './services/neurosityService.js';
+import { togglePlug } from './services/plugService.js';
 
-const app = express();
+const server = app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
+});
 
-async function cleanUp() {
+async function shutdown() {
+  console.log('Shutting down server...');
   await disconnectNeurosity();
-  //await togglePlugOn();
+  await togglePlug('on', 'neurosity');
+  await togglePlug('off', 'scent');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 }
 
-async function main() {
-  await cleanUp();
-
-  try {
-    app.use('/', routes);
-    app.listen(config.port, () => {
-      console.log(`Server running on http://localhost:${config.port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-}
-
-main();
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

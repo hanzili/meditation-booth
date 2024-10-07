@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "music-metadata": "^10.5.0",
     "node-aplay": "^1.0.3",
-    "play-sound": "^1.1.6"
+    "play-sound": "^1.1.6",
+    "winston": "^3.15.0"
   }
 }
