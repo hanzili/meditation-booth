@@ -1,8 +1,9 @@
+// plug.js
 import { exec } from 'child_process';
 import config from './config.js';
 
 const togglePlugOn = () => {
-    const command  = `kasa --host ${config.plugHost} on`;
+    const command  = `kasa --host ${config.neurosityPlugHost} on`;
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error turning plug on: ${error}`);
@@ -13,7 +14,7 @@ const togglePlugOn = () => {
 }
 
 const togglePlugOff = () => {
-    const command  = `kasa --host ${config.plugHost} off`;
+    const command  = `kasa --host ${config.neurosityPlugHost} off`;
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error turning plug off: ${error}`);

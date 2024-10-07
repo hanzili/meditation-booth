@@ -1,3 +1,4 @@
+// dataHandler.js
 import fs from "fs";
 import path from "path";
 import { initNeurosity, disconnectNeurosity } from "./neurosity.js";
@@ -5,30 +6,15 @@ import config from "./config.js";
 import { playMusic, stopMusic } from "./audioPlayer.js";
 import { togglePlugOn, togglePlugOff } from "./plug.js";
 import { promises as fsPromises } from 'fs';
+import { sendSessionEndMutation } from './graphqlClient.js'; // Add this import
 
 let isSessionActive = false;
 let currentSessionId = null;
 let dataBuffer = [];
 
-async function saveBufferedData() {
-  if (dataBuffer.length === 0) {
-    console.log("No data to save, buffer is empty");
-    return;
-  }
-
-  const filename = path.join(config.dataDir, `${currentSessionId}_${Date.now()}.json`);
-  try {
-    await fsPromises.writeFile(filename, JSON.stringify(dataBuffer));
-    console.log(`Saved ${dataBuffer.length} data points to ${filename}`);
-    dataBuffer = [];
-  } catch (error) {
-    console.error(`Error saving data for session ${currentSessionId}:`, error);
-    throw error;
-  }
-}
 
 const startSessionWithMusic = async (req, res) => {
-  togglePlugOff();
+  //togglePlugOff();
 
   const { sessionId, musicName } = req.params;
   console.log(
@@ -52,16 +38,6 @@ const startSessionWithMusic = async (req, res) => {
     }
 
     const neurosity = await initNeurosity();
-    // console.log("Subscribing to brainwaves data");
-    // neurosity.brainwaves("powerByBand").subscribe((brainwaves) => {
-    //   if (isSessionActive && currentSessionId) {
-    //     dataBuffer.push(brainwaves);
-    //     if (dataBuffer.length >= bufferSize) {
-    //       console.log(`Buffer full (${bufferSize} items), saving data`);
-    //       saveBufferedData();
-    //     }
-    //   }
-    // });
 
     console.log("Subscribing to calm data");
     let lastDataPoint = null;
@@ -77,14 +53,38 @@ const startSessionWithMusic = async (req, res) => {
       }
     });
 
-    // Start playing music
+    // Start playing music and get the duration
     try {
-      await playMusic(musicName);
-      console.log(`Started playing music: ${musicName}`);
+      const musicDuration = await playMusic(musicName);
+      console.log(`Started playing music: ${musicName}, duration: ${musicDuration} seconds`);
+
+      // Set a timeout to end the session when the music finishes
+      setTimeout(async () => {
+        if (isSessionActive && currentSessionId === sessionId) {
+          console.log(`Music finished for session ${sessionId}. Ending session.`);
+          await endSessionAndMusic({ params: { sessionId } }, {
+            status: () => ({
+              send: (message) => console.log(`Session end status: ${message}`)
+            }),
+            json: (data) => console.log('Session end data:', data)
+          });
+
+          // Send GraphQL mutation
+          try {
+            await sendSessionEndMutation(sessionId, dataBuffer);
+            dataBuffer = [];
+            console.log(`Sent session end mutation for session ${sessionId}`);
+          } catch (error) {
+            console.error(`Error sending session end mutation: ${error.message}`);
+          }
+        }
+      }, musicDuration * 1000);
+
       res.send({
         message: "Session started with brainwave logging and music",
         sessionId: currentSessionId,
         musicName,
+        duration: musicDuration
       });
     } catch (error) {
       console.error(`Failed to start music: ${error.message}`);
@@ -119,55 +119,30 @@ const endSessionAndMusic = async (req, res) => {
   try {
     console.log(`Ending session ${sessionId}`);
     isSessionActive = false;
-    console.log("Saving final buffered data");
-    await saveBufferedData();
     console.log("Stopping music");
     stopMusic();
-    console.log(`Session ${sessionId} ended successfully`);
-    res.send("Session stopped, final data saved, and music stopped");
+    
+    console.log("Sending final buffered data");
+    let calmData = [];
+    if (dataBuffer.length > 0) {
+      calmData = dataBuffer.slice();
+      dataBuffer = [];
+    }
+    res.json({ message: "Session ended", calmData });
+    console.log("Successfully sent final buffered data, calmData:", calmData);
   } catch (error) {
     console.error("Error ending session:", error);
     res.status(500).send(`Error stopping session: ${error.message}`);
   } finally {
     console.log("Resetting current session ID");
     currentSessionId = null;
-  }
-  await disconnectNeurosity();
-  togglePlugOn();
-};
-
-const listSessionFiles = async (req, res) => {
-  const { sessionId } = req.params;
-  console.log(`Listing files for session: ${sessionId}`);
-  try {
-    const files = await fs.readdir(dataDir);
-    console.log(`Total files in directory: ${files.length}`);
-    const sessionFiles = files.filter((file) => file.startsWith(sessionId));
-    console.log(`Files matching session ${sessionId}: ${sessionFiles.length}`);
-    res.json(sessionFiles);
-  } catch (error) {
-    console.error("Error listing session files:", error);
-    res.status(500).send("Error listing session files");
+    await disconnectNeurosity();
+    //togglePlugOn();
   }
 };
 
-const downloadSessionFile = (req, res) => {
-  const { filename } = req.params;
-  const filePath = path.join(dataDir, filename);
-  console.log(`Attempting to download file: ${filePath}`);
-  res.download(filePath, (err) => {
-    if (err) {
-      console.error("Error downloading file:", err);
-      res.status(500).send("Error downloading file");
-    } else {
-      console.log(`File downloaded successfully: ${filename}`);
-    }
-  });
-};
 
 export {
   startSessionWithMusic,
   endSessionAndMusic,
-  listSessionFiles,
-  downloadSessionFile,
 };

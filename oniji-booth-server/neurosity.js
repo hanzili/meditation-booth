@@ -1,3 +1,4 @@
+// neurosity.js
 import { Neurosity } from "@neurosity/sdk";
 import config from "./config.js";
 
@@ -11,8 +12,12 @@ const initNeurosity = async () => {
     const info = await neurosity.getInfo();
     console.log(info);
 
+    let battery = null;
     neurosity.status().subscribe((status) => {
-      console.log(status);
+      if (!battery || status.battery !== battery) {
+        battery = status.battery;
+        console.log("battery", battery);
+      }
     });
   } catch (error) {
     console.error("Failed to log in to Neurosity:", error);
