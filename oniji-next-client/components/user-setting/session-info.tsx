@@ -16,6 +16,33 @@ interface SessionInfoProps {
   };
 }
 
+function parseCustomDateString(dateString: string): number {
+  const regex = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d{6}) ([+-]\d{4}) (\w+)/;
+  const match = dateString.match(regex);
+  
+  if (match) {
+    const [_, year, month, day, hour, minute, second, microsecond, offset] = match;
+    const date = new Date(Date.UTC(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day),
+      parseInt(hour),
+      parseInt(minute),
+      parseInt(second),
+      parseInt(microsecond) / 1000
+    ));
+    
+    // Apply the offset
+    const offsetMinutes = parseInt(offset.slice(0, 3)) * 60 + parseInt(offset.slice(3));
+    date.setMinutes(date.getMinutes() - offsetMinutes);
+    
+    return date.getTime();
+  }
+  
+  console.error('Failed to parse date string:', dateString);
+  return Date.now(); // Fallback to current time if parsing fails
+}
+
 export function SessionInfo({ session }: SessionInfoProps) {
   const [chartData, setChartData] = useState<number[]>([]);
   const [isDataReady, setIsDataReady] = useState(false);
@@ -57,9 +84,9 @@ export function SessionInfo({ session }: SessionInfoProps) {
   };
 
   const calculateSessionLength = (startTime: string, endTime: string): number => {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    return Math.round((end.getTime() - start.getTime()) / 1000);
+    const start = parseCustomDateString(startTime);
+    const end = parseCustomDateString(endTime);
+    return Math.round((end - start) / 1000);
   };
 
   const sessionLength = calculateSessionLength(session.start_time, session.end_time);
@@ -78,7 +105,7 @@ export function SessionInfo({ session }: SessionInfoProps) {
     <Card className="w-full max-w-md mb-4">
       <CardHeader>
         <CardTitle className="text-lg">
-          Session {formatDistanceToNow(new Date(session.start_time), {
+          Session {formatDistanceToNow(parseCustomDateString(session.start_time), {
             addSuffix: true,
           })}
         </CardTitle>
@@ -87,7 +114,7 @@ export function SessionInfo({ session }: SessionInfoProps) {
         <Badge className="mr-2">{getMoodInfo(session.mood)}</Badge>
         <Badge className="mr-2">{getSessionTypeInfo(session.session_type)}</Badge>
         <Badge className="mr-2">{getScentInfo(session.has_scene)}</Badge>
-        <Badge>{getMeditationLengthInfo(session.music.name)}</Badge>
+        <Badge className="mr-2">{getMeditationLengthInfo(session.music.name)}</Badge>
         {isDataReady && <Badge>{`${sessionLength} seconds`}</Badge>}
         {isDataReady && (
           <ReportChart 

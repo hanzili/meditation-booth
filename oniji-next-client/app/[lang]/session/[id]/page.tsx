@@ -8,6 +8,35 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { END_SESSION, GET_SESSION } from "@/lib/gql";
 import Image from "next/image";
 import InstructionImage from "@/public/instruction.webp";
+import { format } from 'date-fns';
+
+// Add this function at the top of your file, outside of any component
+function parseCustomDateString(dateString: string): number {
+  const regex = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d{6}) ([+-]\d{4}) (\w+)/;
+  const match = dateString.match(regex);
+  
+  if (match) {
+    const [_, year, month, day, hour, minute, second, microsecond, offset] = match;
+    const date = new Date(Date.UTC(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day),
+      parseInt(hour),
+      parseInt(minute),
+      parseInt(second),
+      parseInt(microsecond) / 1000
+    ));
+    
+    // Apply the offset
+    const offsetMinutes = parseInt(offset.slice(0, 3)) * 60 + parseInt(offset.slice(3));
+    date.setMinutes(date.getMinutes() - offsetMinutes);
+    
+    return date.getTime();
+  }
+  
+  console.error('Failed to parse date string:', dateString);
+  return Date.now(); // Fallback to current time if parsing fails
+}
 
 function PopUp({ onClose }: { onClose: () => void }) {
   return (
@@ -60,12 +89,14 @@ export default function SessionPage({ params }: { params: { id: string } }) {
         }
 
         const duration = session.music.duration;
-        const startTime = new Date(session.start_time).getTime();
-        const currentTime = new Date().getTime();
+        const startTime = parseCustomDateString(session.start_time);
+        const currentTime = Date.now();
         const elapsedTime = Math.floor((currentTime - startTime) / 1000);
         const remainingTime = Math.max(duration - elapsedTime, 0);
 
         setCountdownTime(remainingTime);
+      } else {
+        console.log('No session data in the response');
       }
     },
   });
