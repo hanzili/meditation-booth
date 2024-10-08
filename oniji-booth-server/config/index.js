@@ -15,6 +15,7 @@ const config = {
   scentPlugHost: process.env.SCENT_PLUG_HOST,
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8080/query',
   usePlug: process.env.USE_PLUG === 'true',
+  speakerAddress: process.env.SPEAKER_ADDRESS,
 };
 
 const requiredFields = [

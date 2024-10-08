@@ -3,6 +3,9 @@ import app from './app.js';
 import config from './config/index.js';
 import { disconnectNeurosity } from './services/neurosityService.js';
 import { togglePlug } from './services/plugService.js';
+import { keepBluetoothConnection } from './services/speakerService.js';
+
+keepBluetoothConnection();
 
 const server = app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`);
