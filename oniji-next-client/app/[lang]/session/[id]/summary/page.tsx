@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_SESSION } from '@/lib/gql';
 import { useLocalizedRouter } from '@/hooks/use-localized';
@@ -15,19 +15,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useState } from 'react';
 
 export default function SessionSummaryPage({ params }: { params: { id: string, lang: string } }) {
   const router = useLocalizedRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loading, error, data } = useQuery(GET_SESSION, {
     variables: { input: { id: params.id } },
+    fetchPolicy: 'network-only',
   });
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   if (error) return <div className="flex items-center justify-center min-h-screen">Error: {error.message}</div>;
 
   const session = data?.ONIJI_GetSession?.session;
-
   if (!session) return <div className="flex items-center justify-center min-h-screen">No session found</div>;
 
   const handleHomeClick = () => {

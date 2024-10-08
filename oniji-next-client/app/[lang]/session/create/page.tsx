@@ -50,7 +50,6 @@ export default function CreateSessionPage({ params }: { params: { lang: string }
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    console.log(storedToken);
     if (!storedToken) {
       router.push("/login");
     } else {

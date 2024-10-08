@@ -6,25 +6,72 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { END_SESSION, GET_SESSION } from "@/lib/gql";
+import Image from "next/image";
+import InstructionImage from "@/public/instruction.webp";
+
+function PopUp({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 m-6">
+      <Card className="w-full max-w-md p-8">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            Instructions
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center">
+          <Image
+            src={InstructionImage}
+            alt="Brain wave detector instructions"
+            width={300}
+            height={200}
+            className="mb-4"
+          />
+          <p className="text-center mb-4">
+            Please wear the brain wave detector as shown in the picture.
+          </p>
+          <Button onClick={onClose} className="w-full max-w-xs">
+            Got it
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export default function SessionPage({ params }: { params: { id: string } }) {
   const router = useLocalizedRouter();
   const [countdownTime, setCountdownTime] = useState(0);
   const handleSessionEndRef = useRef<() => Promise<void>>();
+  const [showPopUp, setShowPopUp] = useState(true);
 
   // GraphQL queries and mutations
   const [endSession, { loading: endSessionLoading, error: endSessionError }] =
     useMutation(END_SESSION);
-  const {
-    data,
-    loading: getSessionLoading,
-    error: getSessionError,
-  } = useQuery(GET_SESSION, {
+  const { data, loading: getSessionLoading, error: getSessionError } = useQuery(GET_SESSION, {
     variables: { input: { id: params.id } },
+    pollInterval: 5000, // Poll every 5 seconds
+    onCompleted: (data) => {
+      if (data?.ONIJI_GetSession?.session) {
+        const session = data.ONIJI_GetSession.session;
+
+        if (session.end_time) {
+          router.push(`/session/${params.id}/summary`);
+          return;
+        }
+
+        const duration = session.music.duration;
+        const startTime = new Date(session.start_time).getTime();
+        const currentTime = new Date().getTime();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        const remainingTime = Math.max(duration - elapsedTime, 0);
+
+        setCountdownTime(remainingTime);
+      }
+    },
   });
 
   // Handle session end
-  handleSessionEndRef.current = useCallback(async () => {
+  const handleSessionEnd = useCallback(async () => {
     try {
       await endSession({
         variables: { input: { id: params.id } },
@@ -35,32 +82,23 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     }
   }, [endSession, params.id, router]);
 
-  // Set up countdown timer
+  handleSessionEndRef.current = handleSessionEnd;
+
+  // Update countdown timer every second
   useEffect(() => {
-    if (data?.ONIJI_GetSession?.session) {
-      const session = data.ONIJI_GetSession.session;
-      const duration = session.music.duration;
-      const startTime = new Date(session.start_time).getTime();
-      const currentTime = new Date().getTime();
-      const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-      const remainingTime = Math.max(duration - elapsedTime, 0);
+    const interval = setInterval(() => {
+      setCountdownTime((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(interval);
+          handleSessionEndRef.current?.();
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
 
-      setCountdownTime(remainingTime);
-
-      const interval = setInterval(() => {
-        setCountdownTime((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(interval);
-            handleSessionEndRef.current?.();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [data]);
+    return () => clearInterval(interval);
+  }, []);
 
   // Render loading and error states
   if (getSessionLoading) return <div>Loading...</div>;
@@ -75,6 +113,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex items-center justify-center w-full">
+      {showPopUp && <PopUp onClose={() => setShowPopUp(false)} />}
       <Card className="w-full max-w-md p-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -86,7 +125,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
             {formatTime(countdownTime)}
           </div>
           <Button 
-            onClick={() => handleSessionEndRef.current?.()} 
+            onClick={handleSessionEnd} 
             disabled={endSessionLoading} 
             className="w-full max-w-xs"
           >

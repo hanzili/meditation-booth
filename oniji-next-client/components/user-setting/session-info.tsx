@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportChart } from "@/components/report-chart";
@@ -17,6 +17,9 @@ interface SessionInfoProps {
 }
 
 export function SessionInfo({ session }: SessionInfoProps) {
+  const [chartData, setChartData] = useState<number[]>([]);
+  const [isDataReady, setIsDataReady] = useState(false);
+
   const getMoodInfo = (mood: string) => {
     if (mood == "HIGH_ENERGY_UNPLEASANT") {
       return "High-energy unpleasant";
@@ -53,6 +56,24 @@ export function SessionInfo({ session }: SessionInfoProps) {
     }
   };
 
+  const calculateSessionLength = (startTime: string, endTime: string): number => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    return Math.round((end.getTime() - start.getTime()) / 1000);
+  };
+
+  const sessionLength = calculateSessionLength(session.start_time, session.end_time);
+
+  useEffect(() => {
+    if (session.calm && session.calm.trim() !== '') {
+      const points = session.calm.split(",").map(Number);
+      setChartData(points);
+      setIsDataReady(true);
+    }
+  }, [session.calm]);
+
+  const hasData = session.calm && session.calm.trim() !== '';
+
   return (
     <Card className="w-full max-w-md mb-4">
       <CardHeader>
@@ -67,8 +88,12 @@ export function SessionInfo({ session }: SessionInfoProps) {
         <Badge className="mr-2">{getSessionTypeInfo(session.session_type)}</Badge>
         <Badge className="mr-2">{getScentInfo(session.has_scene)}</Badge>
         <Badge>{getMeditationLengthInfo(session.music.name)}</Badge>
-        {session.calm && (
-          <ReportChart points={session.calm.split(" ").map(Number)} />
+        {isDataReady && <Badge>{`${sessionLength} seconds`}</Badge>}
+        {isDataReady && (
+          <ReportChart 
+            points={chartData} 
+            sessionLength={sessionLength}
+          />
         )}
       </CardContent>
     </Card>

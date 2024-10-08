@@ -78,8 +78,6 @@ export default function SignupPage() {
         console.error(data.ONIJI_SignupByEmail.error_message);
         setErrorMessage(data.ONIJI_SignupByEmail.error_message);
       } else {
-        console.log("Signup successful:", data.ONIJI_SignupByEmail.user);
-
         localStorage.setItem("token", data.ONIJI_SignupByEmail.user.token);
         localStorage.setItem("refreshToken", data.ONIJI_SignupByEmail.user.refresh_token);
 

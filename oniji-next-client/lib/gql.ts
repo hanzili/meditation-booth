@@ -98,6 +98,7 @@ export const END_SESSION = gql`
         }
         start_time
         end_time
+        calm
       }
     }
   }
