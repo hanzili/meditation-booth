@@ -49,10 +49,10 @@ export default function Notification() {
         </CardHeader>
         <CardContent>
           <p>
-            Welcome to the OpenBooth Meditation Experience at MUHC Hospital.
+            Welcome to the OpenBooth Meditation Experience at MAIS 2024.
             This web app is exclusively for those who have scanned the QR code
             to access a meditation session. If you are not currently using the
-            OpenBooth at MUHC, please return to the main page
+            OpenBooth at MAIS 2024, please return to the main page
           </p>
         </CardContent>
         <CardFooter className="flex justify-between">
