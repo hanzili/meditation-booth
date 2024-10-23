@@ -1,0 +1,83 @@
+type Music {
+  "name"
+  name: String
+  "duration"
+  duration: Int
+}
+
+type Session {
+  "id"
+  id: String!
+  "user id"
+  user_id: String!
+  "mood"
+  mood: String!
+  "session type"
+  session_type: String!
+  "has scent"
+  has_scent: Boolean!
+  "start time"
+  start_time: String
+  "end time"
+  end_time: String
+  "music"
+  music: Music!
+  "survey"
+  survey: String
+  "calm"
+  calm: String
+}
+
+type OnijiSessionReponse {
+  "error code"
+  error_code: Int
+  "error message"
+  error_message: String
+  "session"
+  session: Session
+}
+
+type OnijiSessionsResponse {
+  "error code"
+  error_code: Int
+  "error message"
+  error_message: String
+  "sessions"
+  sessions: [Session!]
+  "total_count"
+  total_count: Int!
+}
+
+input OnijiCreateSessionInput {
+  mood: String!
+  session_type: String!
+  has_scent: Boolean!
+  language: String!
+  is_long: Boolean!
+}
+
+input OnijiEndSessionInput {
+  id: String!
+}
+
+input OnijiUpdateSessionInput {
+  id: String!
+  survey: String
+}
+
+input OnijiGetSessionInput {
+  id: String!
+}
+
+extend type Query {
+  ONIJI_GetSessions: OnijiSessionsResponse @auth
+  ONIJI_GetSession(input: OnijiGetSessionInput!): OnijiSessionReponse @auth
+}
+
+extend type Mutation {
+  ONIJI_CreateSession(input: OnijiCreateSessionInput!): OnijiSessionReponse
+    @auth
+  ONIJI_EndSession(input: OnijiEndSessionInput!): OnijiSessionReponse @auth
+  ONIJI_UpdateSession(input: OnijiUpdateSessionInput!): OnijiSessionReponse
+    @auth
+}

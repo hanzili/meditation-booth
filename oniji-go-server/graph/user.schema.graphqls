@@ -1,0 +1,73 @@
+enum Language {
+    "English"
+    ENGLIST
+    "French"
+    FRENCH
+}
+
+type User {
+  "id"
+  id: String!
+  "Email"
+  email: String!
+  "First Name"
+  first_name: String
+  "Last Name"
+  last_name: String
+  "language"
+  language: Language
+  "token"
+  token: String!
+  "refresh token"
+  refresh_token: String!
+}
+
+input OnijiSignupByEmailInput {
+  email: String!
+  password: String!
+  first_name: String!
+  last_name: String!
+}
+
+input OnijiLoginByEmailInput {
+  email: String!
+  password: String!
+}
+
+type OnijiUserReponse {
+  "error code"
+  error_code: Int
+  "error message"
+  error_message: String
+  "user"
+  user: User
+}
+
+input OnijiRefreshTokenInput {
+  refresh_token: String!
+}
+
+input OnijiResetPasswordInput {
+  email: String!
+}
+
+input OnijiUpdateUserInput {
+  first_name: String
+  last_name: String
+  language: Language
+  password: String
+  survey: String
+}
+
+extend type Query {
+  ONIJI_User: OnijiUserReponse @auth
+}
+
+type Mutation {
+  ONIJI_SignupByEmail(input: OnijiSignupByEmailInput!): OnijiUserReponse
+  ONIJI_LoginByEmail(input: OnijiLoginByEmailInput!): OnijiUserReponse
+  ONIJI_RefreshToken(input: OnijiRefreshTokenInput!): OnijiUserReponse
+  ONIJI_ResetPassword(input: OnijiResetPasswordInput!): OnijiUserReponse
+  ONIJI_SignOut: OnijiUserReponse @auth
+  ONIJI_UpdateUser(input: OnijiUpdateUserInput!): OnijiUserReponse @auth
+}

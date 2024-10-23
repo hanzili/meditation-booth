@@ -1,0 +1,22 @@
+APP_NAME: oniji-go-server
+ENVIRONMENT: local
+
+POSTGRES:
+  HOST: localhost
+  PORT: 25432
+  USER: postgres
+  PASSWORD: postgres
+  DATABASE: oniji_backend
+
+REDIS:
+  HOST: localhost
+  PORT: 6379
+  USER: ""
+  PASSWORD: ""
+  DB: 0
+
+SUPABASE:
+  URL: example
+  ANON_KEY: example
+
+BOOTH_URL: example
