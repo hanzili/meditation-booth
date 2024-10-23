@@ -2,6 +2,8 @@
 
 An adaptive meditation system that uses EEG data to personalize the environment in real-time, enhancing relaxation through smart home automation.
 
+![Meditation Booth](https://cdn.discordapp.com/attachments/1297389225871806489/1298486466091024486/meeeaaowy4620_An_adaptive_meditation_booth_that_uses_EEG_data_t_70d4b5e8-ffb7-484a-81a0-b27046154e43.png?ex=6719bd42&is=67186bc2&hm=b001660e7d5ea48d2006387670da8c830a08d9ddcbec4c852dbf229a2aaf46c6&)
+
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 ## Architecture
@@ -20,7 +22,6 @@ The project consists of four main components:
 - **website/**:  
   A static landing page introducing the Meditation Booth project, providing general information, and allowing users to explore the concept and functionality of the booth.
 
----
 
 ## Setup Guide
 
