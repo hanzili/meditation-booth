@@ -18,11 +18,3 @@ cp config.example.yml config.yml
 
 <p>4. edit config.yml to connect to redis and postgres</p>  
   
-<h2>💻 Built with</h2>
-
-Technologies used in the project:
-
-*   go
-*   gqlgen
-*   postgres
-*   redis

@@ -25,13 +25,3 @@ npm install
 ```
 npm run dev
 ```
-
-  
-  
-<h2>💻 Built with</h2>
-
-Technologies used in the project:
-
-*   nextjs
-*   apollo client
-*   shadcn-ui
